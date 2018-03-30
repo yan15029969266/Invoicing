@@ -48,6 +48,8 @@
   <ItemGroup>
     <Compile Include="BasicOperation.cs" />
     <Compile Include="Implementation\AccountLogic.cs" />
+    <Compile Include="Implementation\ComponentLogic.cs" />
+    <Compile Include="Interface\IComponentLogic.cs" />
     <Compile Include="Interface\IAccountLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
