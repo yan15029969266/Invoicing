@@ -12,6 +12,7 @@ namespace DBDataModel
         [Key]
         public Guid roleID { get; set; }
         public string roleName { get; set; }
+        public bool enable { get; set; }
         public DateTime ctime { get; set; }
         public Guid cid { get; set; }
         public DateTime uptime { get; set; }

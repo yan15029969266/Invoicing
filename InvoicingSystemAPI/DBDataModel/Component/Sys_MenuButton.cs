@@ -10,12 +10,12 @@ namespace DBDataModel
     public class Sys_MenuButton
     {
         [Key]
-        public int menu_btnID { get; set; }
-        public int fk_btnID { get; set; }
+        public Guid menu_btnID { get; set; }
+        public Guid fk_btnID { get; set; }
         public Guid fk_menuID { get; set; }
-        public DateTime ctime { get; set; }
-        public Guid cid { get; set; }
-        public DateTime uptime { get; set; }
-        public Guid upid { get; set; }
+        //public DateTime ctime { get; set; }
+        //public Guid cid { get; set; }
+        //public DateTime uptime { get; set; }
+        //public Guid upid { get; set; }
     }
 }

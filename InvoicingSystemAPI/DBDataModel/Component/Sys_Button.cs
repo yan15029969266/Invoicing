@@ -10,7 +10,7 @@ namespace DBDataModel
     public class Sys_Button
     {
         [Key]
-        public int btnId { get; set; }
+        public Guid btnId { get; set; }
         public string btnName { get; set; }
         public string func { get; set; }
         public int sort { get; set; }

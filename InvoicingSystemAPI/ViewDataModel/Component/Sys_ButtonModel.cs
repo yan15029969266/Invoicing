@@ -8,7 +8,7 @@ namespace ViewDataModel.Component
 {
     public class Sys_ButtonModel : BaseModel
     {
-        public int btnId { get; set; }
+        public Guid btnId { get; set; }
         public string btnName { get; set; }
         public string func { get; set; }
         public int sort { get; set; }

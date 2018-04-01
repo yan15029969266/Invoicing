@@ -82,22 +82,22 @@ namespace InvoicingSystemWeb.Filters
         public void CreateBreadcrumbNavigation(ResultExecutingContext filterContext)
         {
             string requestUrl = HttpContext.Current.Request.Url.AbsolutePath + HttpContext.Current.Request.Url.Query; ;
-            AuthenticationBll bll = new AuthenticationBll();
-            List<Sys_MenuInfo> list = bll.GetMenuList().Where(t => t.enable == true && t.menuUrl == requestUrl).ToList();
-            if (list.Count > 0)
-            {
-                var result = list.Select(
-                    t => new
-                    {
-                        name = t.menuName,
-                        pname = bll.GetMenuList().FirstOrDefault(o => o.menuID == t.parentID).menuName,
-                        purl = bll.GetMenuList().FirstOrDefault(o => o.menuID == t.parentID).menuUrl
-                    }).FirstOrDefault();
-                string breadcrumbStr = string.Format("<li><a href=\"{0}\">{1}</a></li><li class=\"active\">{2}</li>", result.purl, result.pname, result.name);
-                breadcrumbStr = string.Format("<ol class=\"breadcrumb\"><li><a href=\"#\"><i class=\"fa fa-dashboard\"></i> 主页</a></li>{0}</ol>", breadcrumbStr);
-                ((ViewResult)filterContext.Result).ViewBag.PageTitle = MvcHtmlString.Create("<h1>" + result.name + "<small> " + result.pname + "</small></h1>");
-                ((ViewResult)filterContext.Result).ViewBag.Breadcrumb = MvcHtmlString.Create(breadcrumbStr);
-            }
+            //AuthenticationBll bll = new AuthenticationBll();
+            //List<Sys_MenuInfo> list = bll.GetMenuList().Where(t => t.enable == true && t.menuUrl == requestUrl).ToList();
+            //if (list.Count > 0)
+            //{
+            //    var result = list.Select(
+            //        t => new
+            //        {
+            //            name = t.menuName,
+            //            pname = bll.GetMenuList().FirstOrDefault(o => o.menuID == t.parentID).menuName,
+            //            purl = bll.GetMenuList().FirstOrDefault(o => o.menuID == t.parentID).menuUrl
+            //        }).FirstOrDefault();
+            //    string breadcrumbStr = string.Format("<li><a href=\"{0}\">{1}</a></li><li class=\"active\">{2}</li>", result.purl, result.pname, result.name);
+            //    breadcrumbStr = string.Format("<ol class=\"breadcrumb\"><li><a href=\"#\"><i class=\"fa fa-dashboard\"></i> 主页</a></li>{0}</ol>", breadcrumbStr);
+            //    ((ViewResult)filterContext.Result).ViewBag.PageTitle = MvcHtmlString.Create("<h1>" + result.name + "<small> " + result.pname + "</small></h1>");
+            //    ((ViewResult)filterContext.Result).ViewBag.Breadcrumb = MvcHtmlString.Create(breadcrumbStr);
+            //}
         }
     }
 }

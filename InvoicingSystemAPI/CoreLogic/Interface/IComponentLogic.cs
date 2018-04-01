@@ -10,6 +10,8 @@ namespace CoreLogic.Interface
     public interface IComponentLogic
     {
         List<Sys_Menu> GetMenuList();
-        List<Sys_Button> GetButtonByRole(Guid roleID);
+        List<Sys_Button> GetButtonByRole(Guid roleID, Guid menuID);
+
+        List<Sys_Menu> GetMenuListByRole(Guid roleID);
     }
 }
