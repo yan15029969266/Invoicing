@@ -5,10 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Configuration;
 using Common;
-using DataModel.Account;
 using System.Security.Principal;
 using System.Web.Security;
 using Newtonsoft.Json;
+using DataModel;
 
 namespace InvoicingSystemWeb.Controllers
 {
@@ -34,7 +34,8 @@ namespace InvoicingSystemWeb.Controllers
             {
                 lock (LOCK)
                 {
-                    string url = string.Format("{0}/account/login?account={1}&pwd={2}", ConfigurationManager.AppSettings["APIAddress"], account, pwd);
+
+                    string url = string.Format("{0}/account/login?account={1}&pwd={2}", ConfigurationManager.AppSettings["APIAddress"], account, MD5HelpClass.CreateMD5Hash(pwd));
                     EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
                     if (model != null)
                     {

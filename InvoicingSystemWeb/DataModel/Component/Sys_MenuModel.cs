@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataModel.Component
+namespace DataModel
 {
     public class Sys_MenuModel : BaseModel
     {
@@ -16,5 +16,6 @@ namespace DataModel.Component
         public Guid parentID { get; set; }
         public int sort { get; set; }
         public bool enable { get; set; }
+        public List<Sys_MenuModel> subMenuList { get; set; }
     }
 }

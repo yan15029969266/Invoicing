@@ -12,6 +12,7 @@ namespace CoreLogic.Implementation
 {
     public class ComponentLogic : BasicOperation, IComponentLogic
     {
+        #region menu
         public List<Sys_Menu> GetMenuList()
         {
             using (IDbConnection conn = OpenConnection())
@@ -19,18 +20,7 @@ namespace CoreLogic.Implementation
                 return conn.GetList<Sys_Menu>().ToList();
             }
         }
-        public List<Sys_Button> GetButtonByRole(Guid roleID,Guid menuID)
-        {
-            using (IDbConnection conn = OpenConnection())
-            {
-                string query = @"SELECT btn.* FROM dbo.Sys_ButtonPermissions a
-LEFT JOIN dbo.Sys_MenuButton mb ON a.fk_menu_btnID=mb.menu_btnID
-LEFT JOIN dbo.Sys_Button btn ON mb.fk_btnID=btn.btnId
-WHERE a.fk_roleID=@roleID AND fk_menuID=menuID";
-                return conn.Query<Sys_Button>(query, new { userID = roleID, menuID = menuID }).OrderBy(t => t.sort).ToList();
-                //return conn.GetList<Sys_Button>().ToList();
-            }
-        }
+
 
         public List<Sys_Menu> GetMenuListByRole(Guid roleID)
         {
@@ -40,5 +30,44 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=menuID";
                 return conn.Query<Sys_Menu>(query, new { fk_roleID = roleID }).ToList();
             }
         }
+
+        public Sys_Menu GetMenuListByUrl(string url)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.GetList<Sys_Menu>(new { menuUrl = url }).FirstOrDefault();
+            }
+        }
+        public bool InsertMenu(Sys_Menu menu)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                Guid id = conn.Insert<Guid>(menu);
+                if(id!=null&&id!=Guid.Empty)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        #endregion
+        #region button
+        public List<Sys_Button> GetButtonByRole(Guid roleID, Guid menuID)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                string query = @"SELECT btn.* FROM dbo.Sys_ButtonPermissions a
+LEFT JOIN dbo.Sys_MenuButton mb ON a.fk_menu_btnID=mb.menu_btnID
+LEFT JOIN dbo.Sys_Button btn ON mb.fk_btnID=btn.btnId
+WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
+                return conn.Query<Sys_Button>(query, new { roleID = roleID, menuID = menuID }).OrderBy(t => t.sort).ToList();
+                //return conn.GetList<Sys_Button>().ToList();
+            }
+        }
+        #endregion
+        
     }
 }

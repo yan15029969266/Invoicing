@@ -1,0 +1,49 @@
+﻿@model DataModel.Sys_MenuModel
+<div class="form-horizontal container">
+    @Html.TextBoxFor(Model => Model.cid, new { @class = "hidden" })
+    @Html.TextBoxFor(Model => Model.ctime, new { @class = "hidden" })
+    @Html.TextBoxFor(Model => Model.menuID, new { @class = "hidden" })
+    <div class="form-group">
+        <label class="col-sm-2 control-label">名称</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(Model => Model.menuName, new { @class = "form-control", @placeholder = "菜单名称" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">链接地址</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(Model => Model.menuUrl, new { @class = "form-control", @placeholder = "菜单链接" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">菜单图标</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(Model => Model.menuIcon, new { @class = "form-control", @placeholder = "菜单图标" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">所属菜单</label>
+        <div class="col-sm-10">
+
+            @Html.DropDownListFor(m => m.parentID, ViewBag.menu as List<SelectListItem>, new { @class = "form-control", @placeholder = "菜单图标" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">排序权重</label>
+        <div class="col-sm-10">
+            @Html.TextBoxFor(Model => Model.sort, new { @class = "form-control", @placeholder = "排序权重" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">状态</label>
+        <div class="col-sm-10">
+            @Html.CheckBoxFor(Model => Model.enable, new { @class = "flat-red", @style = "margin-top: 10px;" })
+            @*<input type="password" class="form-control" id="inputPassword3" placeholder="执行方法">*@
+        </div>
+    </div>
+</div>
+<script>
+    function Save() {
+        SaveModal(oTable);
+    }
+</script>

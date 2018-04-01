@@ -52,6 +52,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{f8e2e208-9994-4810-9ab7-0741d91c3f87}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InvoicingSystemWeb\InvoicingSystemWeb.csproj">
       <Project>{38FEC6E5-8A8A-4AFF-A8F9-2709DE19480E}</Project>
       <Name>InvoicingSystemWeb</Name>

@@ -1,0 +1,98 @@
+﻿<section class="content-header sub_head">
+    @ViewBag.PageTitle
+    @ViewBag.Breadcrumb
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            @ViewBag.btnToolBar
+        </div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <table id="data-table" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+
+                                <th>名称</th>
+                                @*<th>ID</th>*@
+                                <th>路径</th>
+                                <th>图标</th>
+                                <th>排序</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@Html.Partial("_FormModal")
+
+<script src="~/plugins/datatables/jquery.dataTables.js"></script>
+<script src="~/Script/mySite.js"></script>
+<script>
+    var oTable;
+    var aoColumns = [
+
+          { "data": "menuName" },
+          //{ "data": "menuID" },
+          { "data": "menuUrl" },
+          { "data": "menuIcon" },
+          { "data": "sort" }];
+    $(document).ready(function () {
+        oTable = InitDatatables($("#data-table"), "@Url.Action("MenuList")?rand=" + Math.random(), aoColumns, oTable, false, null, null, function () { collapse(); });
+        //var table = oTable.DataTable();
+        $(document).on("click", ".treeMinus", function () {
+            var id = $(this).data("menuid")
+            if ($(this).attr("class").indexOf("fa-minus") > -1) {
+                $(this).removeClass("fa-minus").addClass("fa-plus");
+                $("i[data-parentid='" + id + "']").parents("tr").hide();
+            }
+            else if ($(this).attr("class").indexOf("fa-plus") > -1) {
+                $(this).removeClass("fa-plus").addClass("fa-minus");
+                $("i[data-parentid='" + id + "']").parents("tr").show();
+            }
+        });
+    });
+    function Add() {
+        ShowModal("@Url.Action("AddMenu")", {}, "添加菜单", 2);
+    }
+    function Modify() {
+        var id = getSelectRow(oTable, "menuID");
+        if (id)
+            ShowModal("@Url.Action("ModifyMenu")", { Id: id }, "修改菜单", 2);
+    else
+            toastr.warning("请选择一条数据");
+    }
+    function Delete() {
+        var id = getSelectRow(oTable, "menuID");
+        if (id)
+            DeleteRecord("@Url.Action("DeleteMenu")", { Id: id }, oTable);
+    else
+            toastr.warning("请选择一条数据");
+    }
+    //function Save() {
+    //    SaveModal(oTable);
+    //}
+    function SetButton() {
+        var id = getSelectRow(oTable, "menuID");
+        var level = getSelectRow(oTable, "menuLevel");
+        if (id) {
+            if (level < 2) {
+                toastr.warning("一级菜单无法添加按钮");
+            }
+            else{
+                ShowModal("@Url.Action("SetMenuButton")", { Id: id }, "设置菜单按钮");
+            }
+        }
+        else {
+            toastr.warning("请选择一条记录");
+        }
+    }
+    function collapse() {
+        $(".fa-minus[data-up='0']").removeClass("fa-minus").addClass("fa-plus");
+        $("i[data-up!='0']").parents("tr").hide();
+    }
+</script>

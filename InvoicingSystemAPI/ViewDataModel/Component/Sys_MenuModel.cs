@@ -16,5 +16,6 @@ namespace ViewDataModel.Component
         public Guid parentID { get; set; }
         public int sort { get; set; }
         public bool enable { get; set; }
+        public List<Sys_MenuModel> subMenuList { get; set; }
     }
 }

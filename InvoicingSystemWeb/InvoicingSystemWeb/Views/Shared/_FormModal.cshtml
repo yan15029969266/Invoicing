@@ -1,0 +1,31 @@
+﻿<style>
+    .modal-lg-99 {
+        width: 90% !important;
+        margin: auto;
+    }
+</style>
+<!-- general form elements -->
+<div class="modal fade" id="modal-form" data-backdrop="static" style="padding-left:0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="CloseModal()" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="modal-content" class="form-horizontal" action="">
+                    <!--Content-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveBtn" onclick="Save()">保存</button>
+                <button type="button" class="btn btn-default" onclick="CloseModal()">取消</button>
+            </div>
+        </div>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    $().ready(function () {
+        $("#modal-content").validate();
+    });
+</script>

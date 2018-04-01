@@ -13,5 +13,9 @@ namespace CoreLogic.Interface
         List<Sys_Button> GetButtonByRole(Guid roleID, Guid menuID);
 
         List<Sys_Menu> GetMenuListByRole(Guid roleID);
+
+        Sys_Menu GetMenuListByUrl(string url);
+
+        bool InsertMenu(Sys_Menu menu);
     }
 }

@@ -876,6 +876,13 @@
     <Content Include="plugins\timepicker\bootstrap-timepicker.js" />
     <Content Include="plugins\timepicker\bootstrap-timepicker.min.css" />
     <Content Include="plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="Script\bootbox.js" />
+    <Content Include="Script\fnReloadAjax.js" />
+    <Content Include="Script\jQuery.print.js" />
+    <Content Include="Script\jquery.PrintArea.js" />
+    <Content Include="Script\mySite.js" />
+    <Content Include="Script\wwt.js" />
+    <Content Include="Script\wwt_bak.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -884,6 +891,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ComponentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extension\ExpandJsonResult.cs" />
     <Compile Include="Filters\AuthenticationAttribute.cs" />
@@ -957,6 +965,9 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\MainPage.cshtml" />
+    <Content Include="Views\Component\Menu.cshtml" />
+    <Content Include="Views\Shared\_FormModal.cshtml" />
+    <Content Include="Views\Component\MenuForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

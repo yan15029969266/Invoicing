@@ -1,4 +1,5 @@
-﻿using DataModel.Account;
+﻿using Common;
+using DataModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,21 @@ namespace InvoicingSystemWeb.Controllers
             {
                 HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
                 return null;
+            }
+        }
+        protected int GetPageIndex()
+        {
+            return TypeConverter.StrToInt(Request["iDisplayStart"]);
+        }
+        protected void InsertBaseData<T>(T model) where T : BaseModel
+        {
+            EmployeModel e = GetEmployInCookie();
+            if (e!=null)
+            {
+                model.cid = e.employeID;
+                model.upid = e.employeID;
+                model.ctime = DateTime.Now;
+                model.uptime = DateTime.Now;
             }
         }
     }

@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\RoleModel.cs" />
     <Compile Include="BaseModel.cs" />
     <Compile Include="Account\EmployeModel.cs" />
     <Compile Include="Component\Sys_ButtonModel.cs" />

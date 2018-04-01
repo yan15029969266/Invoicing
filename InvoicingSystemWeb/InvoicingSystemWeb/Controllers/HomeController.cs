@@ -1,6 +1,5 @@
 ﻿using Common;
 using DataModel;
-using DataModel.Component;
 using InvoicingSystemWeb.Filters;
 using System;
 using System.Collections.Generic;
