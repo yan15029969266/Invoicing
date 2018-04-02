@@ -60,5 +60,16 @@ namespace InvoicingSystemWeb.Controllers
                 model.uptime = DateTime.Now;
             }
         }
+        protected void UpdateBaseData<T>(T model) where T : BaseModel
+        {
+            EmployeModel e = GetEmployInCookie();
+            if (e != null)
+            {
+                //model.cid = e.employeID;
+                model.upid = e.employeID;
+                //model.ctime = DateTime.Now;
+                model.uptime = DateTime.Now;
+            }
+        }
     }
 }

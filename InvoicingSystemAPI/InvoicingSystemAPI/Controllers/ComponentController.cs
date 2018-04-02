@@ -49,6 +49,7 @@ namespace InvoicingSystemAPI.Controllers
             Sys_MenuModel model = Mapper.Map<Sys_Menu, Sys_MenuModel>(menu); // 使用AutoMapper自动映射
             return model;
         }
+        [HttpPost]
         public bool InsertMenu([FromBody]Sys_MenuModel model)
         {
             Mapper.CreateMap<Sys_MenuModel,Sys_Menu>(); // 配置
@@ -57,6 +58,28 @@ namespace InvoicingSystemAPI.Controllers
             return IComponent.InsertMenu(menu);
         }
 
+        public Sys_MenuModel GetMenu(Guid id)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            Sys_Menu menu = IComponent.GetMenu(id);
+            Mapper.CreateMap<Sys_Menu, Sys_MenuModel>(); // 配置
+            Sys_MenuModel model = Mapper.Map<Sys_Menu,Sys_MenuModel>(menu); // 使用AutoMapper自动映射
+            return model;
+        }
+        [HttpPost]
+        public bool UpdateMenu([FromBody]Sys_MenuModel model)
+        {
+            Mapper.CreateMap<Sys_MenuModel, Sys_Menu>(); // 配置
+            Sys_Menu menu = Mapper.Map<Sys_MenuModel, Sys_Menu>(model); // 使用AutoMapper自动映射
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.UpdateMenu(menu);
+        }
+
+        public bool DeleteMenu(Guid id)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.DeleteMenu(id);
+        }
         #region 生成菜单实体
         private List<Sys_MenuModel> GetMenuStructure(List<Sys_Menu> list)
         {
@@ -115,8 +138,38 @@ namespace InvoicingSystemAPI.Controllers
             List<Sys_ButtonModel> resultList = Mapper.Map<List<Sys_Button>, List<Sys_ButtonModel>>(list); // 使用AutoMapper自动映射
             return resultList;
         }
+        [HttpGet]
+        public List<Sys_ButtonModel> GetButtonList()
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            List<Sys_Button> list = IComponent.GetButtonList();
+            Mapper.CreateMap<Sys_Button, Sys_ButtonModel>(); // 配置
+            List<Sys_ButtonModel> resultList = Mapper.Map<List<Sys_Button>, List<Sys_ButtonModel>>(list); // 使用AutoMapper自动映射
+            return resultList;
+        }
+        [HttpPost]
+        public bool InsertButton([FromBody]Sys_ButtonModel model)
+        {
+            Mapper.CreateMap<Sys_ButtonModel, Sys_Button>(); // 配置
+            Sys_Button button = Mapper.Map<Sys_ButtonModel, Sys_Button>(model); // 使用AutoMapper自动映射
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.InsertButton(button);
+        }
+
+        [HttpPost]
+        public bool UpdateButton([FromBody]Sys_ButtonModel model)
+        {
+            Mapper.CreateMap<Sys_ButtonModel, Sys_Button>(); // 配置
+            Sys_Button button = Mapper.Map<Sys_ButtonModel, Sys_Button>(model); // 使用AutoMapper自动映射
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.UpdateButton(button);
+        }
+
+        public bool DeleteButton(Guid id)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.DeleteButton(id);
+        }
         #endregion
-
-
     }
 }

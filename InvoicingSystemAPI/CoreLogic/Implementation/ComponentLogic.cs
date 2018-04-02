@@ -43,12 +43,69 @@ namespace CoreLogic.Implementation
             using (IDbConnection conn = OpenConnection())
             {
                 Guid id = conn.Insert<Guid>(menu);
-                if(id!=null&&id!=Guid.Empty)
+                if (id != null && id != Guid.Empty)
                 {
                     return true;
                 }
                 else
                 {
+                    return false;
+                }
+            }
+        }
+        public Sys_Menu GetMenu(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.Get<Sys_Menu>(id);
+            }
+        }
+        public bool UpdateMenu(Sys_Menu menu)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                int row = conn.Update(menu);
+                if (row > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool DeleteMenu(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
+                {
+                    Sys_Menu menu = conn.Get<Sys_Menu>(id,tranc);
+                    int row = 0;
+                    if (menu.menuLevel > 1)
+                    {
+                        row = conn.Delete<Sys_Menu>(id,tranc);
+                    }
+                    else
+                    {
+                        row = conn.DeleteList<Sys_Menu>(new { parentID=menu.menuID }, tranc);
+                        row += conn.Delete<Sys_Menu>(id, tranc);
+                    }
+                    tranc.Commit();
+                    if (row > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    tranc.Rollback();
                     return false;
                 }
             }
@@ -67,7 +124,59 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                 //return conn.GetList<Sys_Button>().ToList();
             }
         }
+        public bool InsertButton(Sys_Button button)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                Guid id = conn.Insert<Guid>(button);
+                if (id != null && id != Guid.Empty)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        public bool UpdateButton(Sys_Button button)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                int row = conn.Update(button);
+                if (row > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool DeleteButton(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                int row = conn.Delete<Sys_Button>(id);
+                if (row > 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public List<Sys_Button> GetButtonList()
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.GetList<Sys_Button>().ToList();
+            }
+        }
         #endregion
-        
     }
 }
