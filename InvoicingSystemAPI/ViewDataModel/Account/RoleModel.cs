@@ -11,5 +11,6 @@ namespace ViewDataModel
         public Guid roleID { get; set; }
         public string roleName { get; set; }
         public bool enable { get; set; }
+        public int test { get; set; }
     }
 }
