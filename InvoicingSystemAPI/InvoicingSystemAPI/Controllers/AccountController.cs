@@ -74,9 +74,9 @@ namespace InvoicingSystemAPI.Controllers
         public List<EmployeModel> GetEmployeList()
         {
             IAccountLogic IComponent = container.Resolve<IAccountLogic>();
-            List<Role> list = IComponent.GetRoleList();
+            List<Employe> list = IComponent.GetEmployeList();
             Mapper.CreateMap<Employe, EmployeModel>(); // 配置
-            List<EmployeModel> resultList = Mapper.Map<List<Employe>, List<EmployeModel>>(list); // 使用AutoMapper自动映射
+            List<EmployeModel> resultList = Mapper.Map<List<Employe>, List<EmployeModel>>(list);
             return resultList;
         }
         [HttpPost]
