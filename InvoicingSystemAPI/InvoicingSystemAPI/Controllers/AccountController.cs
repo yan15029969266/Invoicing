@@ -38,6 +38,8 @@ namespace InvoicingSystemAPI.Controllers
         }
         #endregion
         #region role
+        [HttpGet]
+        [Route("api/Account/GetRoleList")]
         public List<RoleModel> GetRoleList()
         {
             IAccountLogic IComponent = container.Resolve<IAccountLogic>();
@@ -72,6 +74,9 @@ namespace InvoicingSystemAPI.Controllers
         }
         #endregion
         #region Employe
+
+        [Route("api/Account/GetEmployeList")]
+        [HttpGet]
         public List<EmployeModel> GetEmployeList()
         {
             IAccountLogic IComponent = container.Resolve<IAccountLogic>();
@@ -105,6 +110,5 @@ namespace InvoicingSystemAPI.Controllers
             return IUser.DeleteEmploye(id);
         }
         #endregion
-        
     }
 }

@@ -175,14 +175,6 @@ namespace InvoicingSystemWeb.Controllers
         public ActionResult AddButton(Sys_ButtonModel model)
         {
             InsertBaseData(model);
-            //if (model.parentID == Guid.Empty)
-            //{
-            //    model.menuLevel = 1;
-            //}
-            //else
-            //{
-            //    model.menuLevel = 2;
-            //}
             try
             {
                 string url = string.Format("{0}/Component/InsertButton", ConfigurationManager.AppSettings["APIAddress"]);

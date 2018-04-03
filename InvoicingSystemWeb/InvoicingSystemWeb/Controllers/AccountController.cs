@@ -79,29 +79,31 @@ namespace InvoicingSystemWeb.Controllers
             return Redirect("/Account/Login");
         }
 
-
+        #region Employer
         public ActionResult Employer()
         {
             return View();
         }
         public ActionResult EmployerList()
         {
+            string url = string.Format("{0}/Account/GetEmployeList", ConfigurationManager.AppSettings["APIAddress"]);
+            List<EmployeModel> resultList = HttpClientHelpClass.GetResponse<List<EmployeModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
             int pageSize = 20;
-            List<EmployeModel> resultList = new List<EmployeModel>
-            {
-                new EmployeModel
-                {
-                    employeNo="E001",
-                    employeName="name1",
-                    employeAccount="ac1"
-                },
-                new EmployeModel
-                {
-                    employeNo="E002",
-                    employeName="name2",
-                    employeAccount="ac2"
-                }
-            };
+            //List<EmployeModel> resultList = new List<EmployeModel>
+            //{
+            //    new EmployeModel
+            //    {
+            //        employeNo="E001",
+            //        employeName="name1",
+            //        employeAccount="ac1"
+            //    },
+            //    new EmployeModel
+            //    {
+            //        employeNo="E002",
+            //        employeName="name2",
+            //        employeAccount="ac2"
+            //    }
+            //};
             return Json(new
             {
                 iDisplayStart = pageSize,
@@ -111,6 +113,8 @@ namespace InvoicingSystemWeb.Controllers
             }
             , JsonRequestBehavior.AllowGet);
         }
+        #endregion
+      
         //public ActionResult AddEmployer()
         //{
 
