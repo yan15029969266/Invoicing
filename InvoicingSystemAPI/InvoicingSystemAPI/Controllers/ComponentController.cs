@@ -139,6 +139,15 @@ namespace InvoicingSystemAPI.Controllers
             return resultList;
         }
         [HttpGet]
+        public List<Sys_ButtonModel> GetButtonByMenu(Guid menuID)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            List<Sys_Button> list = IComponent.GetButtonByMenu(menuID);
+            Mapper.CreateMap<Sys_Button, Sys_ButtonModel>(); // 配置
+            List<Sys_ButtonModel> resultList = Mapper.Map<List<Sys_Button>, List<Sys_ButtonModel>>(list); // 使用AutoMapper自动映射
+            return resultList;
+        }
+        [HttpGet]
         public List<Sys_ButtonModel> GetButtonList()
         {
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();

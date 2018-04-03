@@ -16,10 +16,10 @@ namespace InvoicingSystemWeb.Controllers
     {
         private readonly object LOCK = new object();
         // GET: Account
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
 
         public ActionResult Login()
         {
@@ -78,5 +78,42 @@ namespace InvoicingSystemWeb.Controllers
             //return RedirectToAction("Login");
             return Redirect("/Account/Login");
         }
+
+
+        public ActionResult Employer()
+        {
+            return View();
+        }
+        public ActionResult EmployerList()
+        {
+            int pageSize = 20;
+            List<EmployeModel> resultList = new List<EmployeModel>
+            {
+                new EmployeModel
+                {
+                    employeNo="E001",
+                    employeName="name1",
+                    employeAccount="ac1"
+                },
+                new EmployeModel
+                {
+                    employeNo="E002",
+                    employeName="name2",
+                    employeAccount="ac2"
+                }
+            };
+            return Json(new
+            {
+                iDisplayStart = pageSize,
+                iTotalRecords = resultList.Count,
+                iTotalDisplayRecords = resultList.Count,
+                aaData = resultList
+            }
+            , JsonRequestBehavior.AllowGet);
+        }
+        //public ActionResult AddEmployer()
+        //{
+
+        //}
     }
 }

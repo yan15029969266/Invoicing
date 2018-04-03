@@ -19,5 +19,12 @@ namespace DataModel
         public string employeImage { get; set; }
         public Guid fk_roleID { get; set; }
         public bool enable { get; set; }
+        public string status
+        {
+            get
+            {
+                return enable ? "<span class='label label-success'>激活</span>" : "<span class='label label-danger'>禁止</span>";
+            }
+        }
     }
 }

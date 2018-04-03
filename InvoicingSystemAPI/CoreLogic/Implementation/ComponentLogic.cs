@@ -124,6 +124,17 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                 //return conn.GetList<Sys_Button>().ToList();
             }
         }
+        public List<Sys_Button> GetButtonByMenu(Guid menuID)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                string query = @"SELECT btn.* FROM dbo.Sys_MenuButton mb 
+LEFT JOIN dbo.Sys_Button btn ON mb.fk_btnID=btn.btnId
+WHERE mb.fk_menuID=@menuID";
+                return conn.Query<Sys_Button>(query, new {menuID = menuID }).OrderBy(t => t.sort).ToList();
+                //return conn.GetList<Sys_Button>().ToList();
+            }
+        }
         public bool InsertButton(Sys_Button button)
         {
             using (IDbConnection conn = OpenConnection())

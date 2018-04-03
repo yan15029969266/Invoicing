@@ -971,6 +971,8 @@
     <Content Include="Views\Component\Menu.cshtml" />
     <Content Include="Views\Shared\_FormModal.cshtml" />
     <Content Include="Views\Component\MenuForm.cshtml" />
+    <Content Include="Views\Account\Employer.cshtml" />
+    <Content Include="Views\Account\EmployerForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
