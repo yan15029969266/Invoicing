@@ -1,5 +1,6 @@
 ﻿using Common;
 using DataModel;
+using InvoicingSystemWeb.Extension;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,10 @@ namespace InvoicingSystemWeb.Controllers
             }
             catch (Exception ex)
             {
-                HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
-                return null;
+                //Response.Write("<script>location.href='/Account/Login';</script>");
+                throw new AtuhException();
+                //HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+                //return null;
             }
             if (authTicket != null && HttpContext.User.Identity.IsAuthenticated)//如果Cookies不为Null 也通过验证
             {
@@ -41,8 +44,10 @@ namespace InvoicingSystemWeb.Controllers
             }
             else
             {
-                HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
-                return null;
+                //Response.Write("<script>location.href='/Account/Login';</script>");
+                throw new AtuhException();
+                //HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+                //return null;
             }
         }
         protected int GetPageIndex()

@@ -24,7 +24,8 @@ namespace InvoicingSystemWeb.Filters
             }
             catch (Exception ex)
             {
-                filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+                filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
+                //filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
                 return;
             }
             if (authTicket != null && filterContext.HttpContext.User.Identity.IsAuthenticated)//如果Cookies不为Null 也通过验证
@@ -36,7 +37,8 @@ namespace InvoicingSystemWeb.Filters
             }
             else
             {
-                filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+                filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
+                //filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
             }
         }
     }

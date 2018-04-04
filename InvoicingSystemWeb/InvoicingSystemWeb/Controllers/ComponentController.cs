@@ -48,6 +48,7 @@ namespace InvoicingSystemWeb.Controllers
             , JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
+        [Authentication]
         public ActionResult AddMenu()
         {
             Sys_MenuModel model = new Sys_MenuModel { menuID = Guid.NewGuid() };
@@ -55,6 +56,7 @@ namespace InvoicingSystemWeb.Controllers
             return PartialView("MenuForm", model);
         }
         [HttpPost]
+        [Authentication]
         public ActionResult AddMenu(Sys_MenuModel model)
         {
             InsertBaseData(model);
@@ -84,20 +86,9 @@ namespace InvoicingSystemWeb.Controllers
             {
                 return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
             }
-            //AuthenticationBll bll = new AuthenticationBll();
-            //Mapper.CreateMap<MenuInfoModel, Sys_MenuInfo>(); // 配置
-            //Sys_MenuInfo menu = Mapper.Map<MenuInfoModel, Sys_MenuInfo>(model); // 使用AutoMapper自动映射
-            //int row = bll.InsertMenu(menu);
-            //if (row > 0)
-            //{
-            //    return Json(new OperationResult(OperationResultType.Success, "添加成功！"));
-            //}
-            //else
-            //{
-            //    return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
-            //}
         }
         [HttpGet]
+        [Authentication]
         public ActionResult ModifyMenu(Guid id)
         {
             string url = string.Format("{0}/Component/GetMenu?id={1}", ConfigurationManager.AppSettings["APIAddress"],id);
@@ -105,6 +96,7 @@ namespace InvoicingSystemWeb.Controllers
             return PartialView("MenuForm", model);
         }
         [HttpPost]
+        [Authentication]
         public ActionResult ModifyMenu(Sys_MenuModel model)
         {
             UpdateBaseData(model);
@@ -128,6 +120,7 @@ namespace InvoicingSystemWeb.Controllers
             }
         }
 
+        [Authentication]
         public ActionResult DeleteMenu(Guid id)
         {
             try
@@ -166,12 +159,14 @@ namespace InvoicingSystemWeb.Controllers
         #endregion
         #region button
         [HttpGet]
+        [Authentication]
         public ActionResult AddButton()
         {
             Sys_ButtonModel model = new Sys_ButtonModel { btnId = Guid.NewGuid() };
             return PartialView("ButtonForm", model);
         }
         [HttpPost]
+        [Authentication]
         public ActionResult AddButton(Sys_ButtonModel model)
         {
             InsertBaseData(model);

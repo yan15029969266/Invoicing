@@ -332,6 +332,10 @@ function SaveModal(oTable, pActionUrl, pData, callback, modelHide) {
                         $('#modal-form').modal('hide');
                     }
                 }
+                else if(data.ResultType == "4")
+                {
+                    location.href = "/Account/Login"
+                }
                 else if (data.ResultType == "6") {
                     toastr.warning(data.Message);
                 }

@@ -90,6 +90,10 @@
       <Project>{44626c38-1623-4d87-8163-2f98f5abd978}</Project>
       <Name>CoreLogic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DBDataModel\DBDataModel.csproj">
+      <Project>{80a8fe2e-a048-46a8-a485-7bbd6aac08d1}</Project>
+      <Name>DBDataModel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InvoicingSystemAPI\InvoicingSystemAPI.csproj">
       <Project>{9399C304-780C-4EB6-A9FE-084C0AE8E314}</Project>
       <Name>InvoicingSystemAPI</Name>

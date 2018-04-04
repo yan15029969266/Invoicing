@@ -6,6 +6,7 @@
     <div class="row">
         <div class="col-xs-12">
             @ViewBag.btnToolBar
+            <button class=\"btn btn-primary margin\" onclick="Add()">ADD</button>
         </div>
         <div class="col-xs-12">
             <div class="box">
@@ -45,5 +46,8 @@
     $(document).ready(function () {
         oTable = InitDatatables($("#data-table"), "@Url.Action("EmployerList")?rand=" + Math.random(), aoColumns, oTable);
     });
+    function Add() {
+        ShowModal("@Url.Action("AddEmployer")", {}, "添加员工", 2);
+    }
 </script>
 

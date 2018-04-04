@@ -19,12 +19,13 @@ namespace Common
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string GetResponse(string url, out string statusCode)
+        public static string GetResponse(string url, string token,out string statusCode)
         {
             if (url.StartsWith("https"))
                 System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
             var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("AuthToken", token);
             httpClient.DefaultRequestHeaders.Accept.Add(
               new MediaTypeWithQualityHeaderValue("application/json"));
             HttpResponseMessage response = httpClient.GetAsync(url).Result;

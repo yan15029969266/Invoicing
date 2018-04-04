@@ -181,11 +181,12 @@ WHERE mb.fk_menuID=@menuID";
                 }
             }
         }
-        public List<Sys_Button> GetButtonList()
+        public List<Sys_Button> GetButtonList(int pageIndex,int pageSize)
         {
             using (IDbConnection conn = OpenConnection())
             {
-                return conn.GetList<Sys_Button>().ToList();
+                //return conn.GetList<Sys_Button>().ToList();
+                return conn.GetListPaged<Sys_Button>(pageIndex, pageSize, "where 1=1", "ctime").ToList();
             }
         }
         #endregion

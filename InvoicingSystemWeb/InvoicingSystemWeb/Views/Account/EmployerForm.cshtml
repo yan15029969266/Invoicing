@@ -1,10 +1,17 @@
 ﻿@model DataModel.EmployeModel
 <div class="form-horizontal container">
-    @Html.TextBoxFor(Model => Model.cid, new { @class = "hidden" })
-    @Html.TextBoxFor(Model => Model.ctime, new { @class = "hidden" })
-    @Html.TextBoxFor(Model => Model.employeID, new { @class = "hidden" })
-    @Html.TextBoxFor(Model => Model.employePwd, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.cid, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.ctime, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.employeID, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.employePwd, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.employeNo, new { @class = "hidden" })
     <div class="form-group">
-        <label class="col-sm-2"></label>
+        <label class="col-sm-2">员工编号：</label><label class="col-sm-10">@Model.employeNo</label>
     </div>
 </div>
+<script>
+    function Save()
+    {
+        SaveModal(oTable);
+    }
+</script>

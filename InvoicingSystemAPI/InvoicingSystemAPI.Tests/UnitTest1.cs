@@ -5,6 +5,9 @@ using Microsoft.Practices.Unity.Configuration;
 using System.Configuration;
 using CoreLogic.Interface;
 using CoreLogic.Implementation;
+using System.Collections.Generic;
+using DBDataModel;
+using System.Linq;
 
 namespace InvoicingSystemAPI.Tests
 {
@@ -34,6 +37,21 @@ namespace InvoicingSystemAPI.Tests
             IAccountLogic IUser = container2.Resolve<IAccountLogic>();
             //执行
             //IUser.Login();
+        }
+        [TestMethod]
+        public void TestSort()
+        {
+            int a = 1;
+            string b = a.ToString("00000");
+            int c = 111;
+            string d = c.ToString("00000");
+            List<Employe> list = new List<Employe>
+            {
+                new Employe {employeNo="E008" },
+                new Employe {employeNo="E001" },
+                new Employe {employeNo="E004" }
+            };
+            list = list.OrderBy(t => t.employeNo).ToList();
         }
     }
 }

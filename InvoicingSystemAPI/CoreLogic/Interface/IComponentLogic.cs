@@ -21,7 +21,7 @@ namespace CoreLogic.Interface
         #region Button
         List<Sys_Button> GetButtonByRole(Guid roleID, Guid menuID);
         List<Sys_Button> GetButtonByMenu(Guid menuID);
-        List<Sys_Button> GetButtonList();
+        List<Sys_Button> GetButtonList(int pageIndex, int pageSize);
         bool InsertButton(Sys_Button button);
         bool UpdateButton(Sys_Button button);
         bool DeleteButton(Guid id);

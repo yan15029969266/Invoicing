@@ -11,17 +11,18 @@ namespace CoreLogic.Interface
     {
        
         #region Role
-        List<Role> GetRoleList();
+        List<Role> GetRoleList(int pageIndex, int pageSize);
         bool InsertRole(Role role);
         bool UpdateRole(Role role);
         bool DeleteRole(Guid id);
         #endregion
         #region Employer
         Employe Login(string account, string pwd);
-        List<Employe> GetEmployeList();
+        List<Employe> GetEmployeList(int pageIndex, int pageSize);
         bool InsertEmploye(Employe e);
         bool UpdateEmploye(Employe e);
         bool DeleteEmploye(Guid id);
+        string GetNewEmployeNo();
         #endregion
     }
 }
