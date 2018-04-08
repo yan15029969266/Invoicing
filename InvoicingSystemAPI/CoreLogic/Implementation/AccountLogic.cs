@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data;
+using ViewDataModel;
 
 namespace CoreLogic.Implementation
 {
@@ -64,6 +65,40 @@ namespace CoreLogic.Implementation
                 {
                     return false;
                 }
+            }
+        }
+        public AuthModel GetRoleAuth(Guid roleID)
+        {
+            AuthModel model = new AuthModel { roleId = roleID };
+            using (IDbConnection conn = OpenConnection())
+            {
+                string sqlQuery = @"SELECT m.menuID,m.menuName,
+                                    CASE WHEN mp.id IS  null  THEN 0 ELSE 1 END isSelected
+                                    FROM dbo.Sys_Menu m
+                                    LEFT JOIN (SELECT * FROM dbo.Sys_MenuPermissions WHERE fk_roleID=@roleId) mp ON m.menuID=mp.fk_menuID
+                                    WHERE m.enable=1 AND m.menuLevel=1 ORDER BY m.sort";
+                model.menuList = conn.Query<PMenuAuth>(sqlQuery, new { roleId = roleID }).ToList();
+                foreach (PMenuAuth m in model.menuList)
+                {
+                    sqlQuery = @"SELECT m.menuID,m.menuName,
+                                    CASE WHEN mp.id IS  null  THEN 0 ELSE 1 END isSelected
+                                    FROM dbo.Sys_Menu m
+                                    LEFT JOIN (SELECT * FROM dbo.Sys_MenuPermissions WHERE fk_roleID=@roleId) mp ON m.menuID=mp.fk_menuID
+                                    WHERE m.enable=1 AND m.parentID=@parentID ORDER BY m.sort";
+                    m.cmenuList = conn.Query<CMenuAuth>(sqlQuery, new { roleId = roleID, parentID=m.menuID }).ToList();
+                    foreach (CMenuAuth cm in m.cmenuList)
+                    {
+
+                        sqlQuery = @"SELECT mb.menu_btnID,b.btnName,
+                                 CASE WHEN bp.id IS  null  THEN 0 ELSE 1 END isSelected
+                                 FROM dbo.Sys_MenuButton mb
+                                 LEFT JOIN dbo.Sys_Button b ON mb.fk_btnID=b.btnId
+                                 LEFT JOIN (SELECT * FROM dbo.Sys_ButtonPermissions WHERE fk_roleID=@roleId) bp ON mb.menu_btnID=bp.fk_menu_btnID
+                                 WHERE fk_menuID=@menuID AND b.enable=1 ORDER BY b.sort";
+                        cm.buttonList = conn.Query<ButtonAuth>(sqlQuery, new { roleId = roleID, menuID = cm.menuID }).ToList();
+                    }
+                }
+                return model;
             }
         }
         #endregion

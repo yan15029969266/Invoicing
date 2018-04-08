@@ -976,6 +976,10 @@
     <Content Include="Views\Component\MenuForm.cshtml" />
     <Content Include="Views\Account\Employer.cshtml" />
     <Content Include="Views\Account\EmployerForm.cshtml" />
+    <Content Include="Views\Component\SetMenuButton.cshtml" />
+    <Content Include="Views\Component\Button.cshtml" />
+    <Content Include="Views\Account\Role.cshtml" />
+    <Content Include="Views\Account\RoleAuthForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewDataModel;
 
 namespace CoreLogic.Interface
 {
@@ -15,6 +16,7 @@ namespace CoreLogic.Interface
         bool InsertRole(Role role);
         bool UpdateRole(Role role);
         bool DeleteRole(Guid id);
+        AuthModel GetRoleAuth(Guid roleID);
         #endregion
         #region Employer
         Employe Login(string account, string pwd);
@@ -24,5 +26,7 @@ namespace CoreLogic.Interface
         bool DeleteEmploye(Guid id);
         string GetNewEmployeNo();
         #endregion
+
+        
     }
 }

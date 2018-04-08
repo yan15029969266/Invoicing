@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace DataModel
 {
-    public class Sys_ButtonModel:BaseModel
+    public class RoleModel : BaseModel
     {
-        public Guid btnId { get; set; }
-        public string btnName { get; set; }
-        public string func { get; set; }
-        public int sort { get; set; }
+        public Guid roleID { get; set; }
+        public string roleName { get; set; }
         public bool enable { get; set; }
         public string status
         {

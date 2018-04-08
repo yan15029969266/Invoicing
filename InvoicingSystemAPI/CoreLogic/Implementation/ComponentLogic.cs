@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DBDataModel;
 using Dapper;
 using System.Data;
+using ViewDataModel.Component;
 
 namespace CoreLogic.Implementation
 {
@@ -124,14 +125,16 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                 //return conn.GetList<Sys_Button>().ToList();
             }
         }
-        public List<Sys_Button> GetButtonByMenu(Guid menuID)
+        public List<MenuButtonModel> GetButtonByMenu(Guid menuID)
         {
             using (IDbConnection conn = OpenConnection())
             {
-                string query = @"SELECT btn.* FROM dbo.Sys_MenuButton mb 
-LEFT JOIN dbo.Sys_Button btn ON mb.fk_btnID=btn.btnId
-WHERE mb.fk_menuID=@menuID";
-                return conn.Query<Sys_Button>(query, new {menuID = menuID }).OrderBy(t => t.sort).ToList();
+                string query = @"SELECT  @menuID menuID,
+                                CASE WHEN mb.fk_menuID IS  null  THEN 0 ELSE 1 END isSelected,                                
+                                btn.* FROM dbo.Sys_Button btn
+                                 LEFT JOIN (SELECT * FROM dbo.Sys_MenuButton WHERE fk_menuID=@menuID) mb ON mb.fk_btnID=btn.btnId
+                                 Where btn.enable=1";
+                return conn.Query<MenuButtonModel>(query, new { menuID = menuID }).OrderBy(t => t.sort).ToList();
                 //return conn.GetList<Sys_Button>().ToList();
             }
         }
@@ -185,8 +188,47 @@ WHERE mb.fk_menuID=@menuID";
         {
             using (IDbConnection conn = OpenConnection())
             {
-                //return conn.GetList<Sys_Button>().ToList();
-                return conn.GetListPaged<Sys_Button>(pageIndex, pageSize, "where 1=1", "ctime").ToList();
+                if (pageIndex == -1 && pageSize == -1)
+                {
+                    return conn.GetList<Sys_Button>().ToList();
+                }
+                else
+                {
+                    return conn.GetListPaged<Sys_Button>(pageIndex, pageSize, "where 1=1", "ctime").ToList();
+                }
+            }
+        }
+        public bool SetMenuButton(List<MenuButtonModel> list)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
+                {
+                    foreach (MenuButtonModel model in list)
+                    {
+                        Sys_MenuButton mb = new Sys_MenuButton { menu_btnID = Guid.NewGuid(), fk_btnID = model.btnId, fk_menuID = model.menuID };
+                        if (model.isSelected)
+                        {
+                            int count = conn.GetList<Sys_MenuButton>(new { fk_btnID = model.btnId, fk_menuID = model.menuID }, tranc).Count();
+                            if (count <= 0)
+                            {
+                                conn.Insert<Guid>(mb, tranc);
+                            }
+                        }
+                        else
+                        {
+                            conn.DeleteList<Sys_MenuButton>(new { fk_btnID = model.btnId, fk_menuID = model.menuID }, tranc);
+                        }
+                    }
+                    tranc.Commit();
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    tranc.Rollback();
+                    return false;
+                }
             }
         }
         #endregion

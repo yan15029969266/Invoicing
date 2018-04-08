@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\AuthModel.cs" />
     <Compile Include="Account\RoleModel.cs" />
     <Compile Include="BaseModel.cs" />
     <Compile Include="Account\EmployeModel.cs" />
+    <Compile Include="Component\MenuButtonModel.cs" />
     <Compile Include="Component\Sys_ButtonModel.cs" />
     <Compile Include="Component\Sys_MenuModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

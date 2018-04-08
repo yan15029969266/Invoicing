@@ -316,7 +316,7 @@ function SaveModal(oTable, pActionUrl, pData, callback, modelHide) {
     if (!$form.valid()) {
         return;
     }
-
+    //alert(data);
     $.ajax({
         type: "POST",
         url: actionUrl,

@@ -33,7 +33,7 @@ namespace InvoicingSystemWeb.Filters
             }
             catch (Exception ex)
             {
-                filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+                //filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
                 return;
             }
             if (authTicket != null && filterContext.HttpContext.User.Identity.IsAuthenticated)//如果Cookies不为Null 也通过验证
@@ -59,10 +59,10 @@ namespace InvoicingSystemWeb.Filters
                 }
                 //CommonMethod.setCookieForMIn("UserName", UserName, 30);//用于全局，加载用户信息
             }
-            else
-            {
-                filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
-            }
+            //else
+            //{
+            //    filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
+            //}
         }
         public void CreateBreadcrumbNavigation(ResultExecutingContext filterContext)
         {

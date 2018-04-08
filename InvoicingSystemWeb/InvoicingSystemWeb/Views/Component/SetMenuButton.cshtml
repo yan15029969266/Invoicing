@@ -1,0 +1,62 @@
+﻿@model Guid
+@using DataModel;
+@{
+    List<MenuButtonModel> list = ViewBag.btn as List<MenuButtonModel>;
+    List<int> selectedID = ViewBag.SelectBtnID as List<int>;
+}
+<div class="row">
+    @{
+        foreach (MenuButtonModel btnModel in list)
+        {
+            <div class="btnInfo">
+                @Html.TextBoxFor(t => btnModel.menuID, new { @class = "hidden" })
+                @Html.TextBoxFor(t => btnModel.btnId, new { @class = "hidden" })
+                @Html.TextBoxFor(t => btnModel.btnName, new { @class = "hidden" })
+                @*@Html.TextBoxFor(t => btnModel.func, new { @class = "hidden" })*@
+                @Html.TextBoxFor(t => btnModel.sort, new { @class = "hidden" })
+                @if (btnModel.isSelected)
+                {
+                <div class="col-xs-4"><input name="menuID" class="btn_sum" type="checkbox" checked="checked" value="@Model" />@btnModel.btnName</div>
+                }
+                else
+                {
+                <div class="col-xs-4"><input name="menuID" class="btn_sum" type="checkbox" value="@btnModel.btnId" />@btnModel.btnName</div>
+                }
+            </div>
+        }
+    }
+</div>
+<script>
+    function Save() {
+        var jsonObj = [];
+        $('.btnInfo').each(function () {
+            var thisItem = $(this);
+            var isSelected = false;
+            if (thisItem.find(".btn_sum").is(':checked'))
+            {
+                isSelected = true;
+            }
+            jsonObj.push({
+                menuID: thisItem.find("#btnModel_menuID").val(),
+                btnId: thisItem.find("#btnModel_btnId").val(),
+                btnName: thisItem.find("#btnModel_btnName").val(),
+                func: thisItem.find("#btnModel_func").val(),
+                sort: thisItem.find("#btnModel_sort").val(),
+                enable: thisItem.find('#btnModel_enable').val(),
+                isSelected: isSelected
+            })
+        });
+        var jasonData = JSON.stringify(jsonObj);
+        //alert(jasonData);
+        //var jsonObj = JSON.parse(jasonData);
+        //alert(jsonObj);
+        //$.post('SetMenuButton', {
+        //    jasonData: jasonData, //直接提交json数组
+        //}, function (data) {
+        //    alert(data);
+        //});
+        SaveModal(oTable, null, {jasonData:jasonData})
+    }
+</script>
+
+

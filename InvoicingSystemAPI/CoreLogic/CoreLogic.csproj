@@ -58,6 +58,10 @@
       <Project>{80a8fe2e-a048-46a8-a485-7bbd6aac08d1}</Project>
       <Name>DBDataModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ViewDataModel\ViewDataModel.csproj">
+      <Project>{7c209e26-a379-4858-b1b9-8e990f680994}</Project>
+      <Name>ViewDataModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

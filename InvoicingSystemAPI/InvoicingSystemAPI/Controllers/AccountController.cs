@@ -77,6 +77,13 @@ namespace InvoicingSystemAPI.Controllers
             //执行
             return IUser.DeleteRole(id);
         }
+        [HttpGet]
+        [Route("api/Account/GetRoleAuth")]
+        public AuthModel GetRoleAuth(Guid roleID)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            return IUser.GetRoleAuth(roleID);
+        }
         #endregion
         #region Employe
 
@@ -124,7 +131,7 @@ namespace InvoicingSystemAPI.Controllers
         {
             IAccountLogic IUser = container.Resolve<IAccountLogic>();
             //执行
-            HttpResponseMessage responseMessage = new HttpResponseMessage { Content = new StringContent("E00001", Encoding.GetEncoding("UTF-8"), "text/plain") };
+            HttpResponseMessage responseMessage = new HttpResponseMessage { Content = new StringContent(IUser.GetNewEmployeNo(), Encoding.GetEncoding("UTF-8"), "text/plain") };
             return responseMessage;
             //return IUser.GetNewEmployeNo();
         }

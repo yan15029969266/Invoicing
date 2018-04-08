@@ -146,13 +146,13 @@ namespace InvoicingSystemAPI.Controllers
         }
         [Route("api/Component/GetButtonByMenu")]
         [HttpGet]
-        public List<Sys_ButtonModel> GetButtonByMenu(Guid menuID)
+        public List<MenuButtonModel> GetButtonByMenu(Guid menuID)
         {
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();
-            List<Sys_Button> list = IComponent.GetButtonByMenu(menuID);
-            Mapper.CreateMap<Sys_Button, Sys_ButtonModel>(); // 配置
-            List<Sys_ButtonModel> resultList = Mapper.Map<List<Sys_Button>, List<Sys_ButtonModel>>(list); // 使用AutoMapper自动映射
-            return resultList;
+            List<MenuButtonModel> list = IComponent.GetButtonByMenu(menuID);
+            //Mapper.CreateMap<Sys_Button, Sys_ButtonModel>(); // 配置
+            //List<Sys_ButtonModel> resultList = Mapper.Map<List<Sys_Button>, List<Sys_ButtonModel>>(list); // 使用AutoMapper自动映射
+            return list;
         }
         [Route("api/Component/GetButtonList")]
         [HttpGet]
@@ -187,6 +187,13 @@ namespace InvoicingSystemAPI.Controllers
         {
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();
             return IComponent.DeleteButton(id);
+        }
+        [HttpPost]
+        [Route("api/Component/SetMenuButton")]
+        public bool SetMenuButton([FromBody]List<MenuButtonModel> list)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            return IComponent.SetMenuButton(list);
         }
         #endregion
     }

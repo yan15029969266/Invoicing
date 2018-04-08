@@ -1,0 +1,77 @@
+﻿@model DataModel.AuthModel
+@using DataModel
+<style>
+    .row {
+        overflow: hidden;
+    }
+
+    [class*="col-"] {
+        margin-bottom: -99999px;
+        padding-bottom: 99999px;
+    }
+</style>
+<div class="row">
+    <div class="row" style="height: 40px; line-height: 40px; font-weight: bold; text-align: center; border: 1px solid #808080; font-size:15px;background-color:#e6d9d9">
+        <div class="col-xs-2" style="border-right: 1px solid #808080;">一级菜单</div>
+        <div class="col-xs-10">
+            <div class="row">
+                <div class="col-xs-2" style="border-right: 1px solid #808080;">二级菜单</div><div class="col-xs-10">按钮</div>
+            </div>
+        </div>
+    </div>
+    @{
+        foreach (PMenuAuth pm in @Model.menuList)
+        {
+            <div class="row" style="line-height:30px;border: 1px solid #808080">
+                <div class="col-xs-2" style="border-right: 1px solid #808080">
+                    @{if (pm.isSelected)
+                    {
+                        <input type="checkbox" class="menu_check" checked="checked" value="@pm.menuID" />@pm.menuName
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="menu_check" value="@pm.menuID" />@pm.menuName
+                    }
+                    }
+
+                </div>
+                <div class="col-xs-10">
+                    @{
+            foreach (CMenuAuth cm in pm.cmenuList)
+            {
+                <div class="row" style="line-height:30px; border-top: 1px solid #808080;border-right: 1px solid #808080">
+                    <div class="col-xs-2" style="border-right: 1px solid #808080">
+                        @if (cm.isSelected)
+                        {
+                            <input type="checkbox" class="menu_check" checked="checked" value="@cm.menuID" />@cm.menuName
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="menu_check" value="@cm.menuID" />@cm.menuName
+                        }
+                    </div>
+
+                    <div class="col-xs-10">
+                        @foreach (ButtonAuth btn in cm.buttonList)
+                        {
+                            <div class="col-xs-3">
+                                @if (btn.isSelected)
+                                {
+                                    <input class="button_check" checked="checked" type="checkbox" value="@btn.menu_btnID" />@btn.btnName
+                                }
+                                else
+                                {
+                                    <input class="button_check" type="checkbox" value="@btn.menu_btnID" />@btn.btnName
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,66 @@
+﻿<link href="~/Css/site.css" rel="stylesheet" />
+
+<section class="content-header sub_head">
+    @ViewBag.PageTitle
+    @ViewBag.Breadcrumb
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            @ViewBag.btnToolBar
+            <div class="btn-toolbar"><button class="btn btn-primary margin" onclick="Auth()">设置权限</button></div>
+        </div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <table id="data-table" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>管理员名称</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@Html.Partial("_FormModal")
+<script src="~/Script/wwt.js"></script>
+<script>
+    var oTable;
+    var aoColumns = [
+          { "data": "roleName" },
+          { "data": "status" }];
+    $(document).ready(function () {
+        oTable = InitDatatables($("#data-table"), "@Url.Action("RoleList")?rand=" + Math.random(), aoColumns, oTable);
+    });
+    function Auth() {
+        var id = getSelectRow(oTable, "roleID");
+        if (id) {
+            ShowModal("@Url.Action("RoleAuth")", { roleID: id }, "设置权限", 2);
+        }
+        else {
+            toastr.warning("请选择一条记录");
+        }
+    }
+    function Add() {
+        ShowModal("@Url.Action("AddRole")", {}, "添加角色", 2);
+    }
+    function Modify() {
+        var id = getSelectRow(oTable, "roleID");
+        if (id)
+            ShowModal("@Url.Action("ModifyRole")", { Id: id }, "修改角色", 2);
+    else
+            toastr.warning("请选择一条数据");
+    }
+    function Delete() {
+        var id = getSelectRow(oTable, "roleID");
+        if (id)
+            DeleteRecord("@Url.Action("DeleteRole")", { Id: id }, oTable);
+    else
+            toastr.warning("请选择一条数据");
+    }
+</script>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViewDataModel.Component;
 
 namespace CoreLogic.Interface
 {
@@ -20,11 +21,14 @@ namespace CoreLogic.Interface
         #endregion
         #region Button
         List<Sys_Button> GetButtonByRole(Guid roleID, Guid menuID);
-        List<Sys_Button> GetButtonByMenu(Guid menuID);
+        List<MenuButtonModel> GetButtonByMenu(Guid menuID);
         List<Sys_Button> GetButtonList(int pageIndex, int pageSize);
         bool InsertButton(Sys_Button button);
         bool UpdateButton(Sys_Button button);
         bool DeleteButton(Guid id);
+        bool SetMenuButton(List<MenuButtonModel> list);
         #endregion
+
+       
     }
 }

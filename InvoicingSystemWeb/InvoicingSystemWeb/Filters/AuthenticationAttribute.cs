@@ -24,7 +24,8 @@ namespace InvoicingSystemWeb.Filters
             }
             catch (Exception ex)
             {
-                filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
+                filterContext.HttpContext.Response.Write("<script>if (self != top) { window.parent.location.href='/Account/Login'; }else{location.href='/Account/Login'; }</script>");
+                //filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
                 //filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
                 return;
             }
@@ -37,7 +38,8 @@ namespace InvoicingSystemWeb.Filters
             }
             else
             {
-                filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
+                filterContext.HttpContext.Response.Write("<script>if (self != top) { window.parent.location.href='/Account/Login'; }else{location.href='/Account/Login'; }</script>");
+                //filterContext.HttpContext.Response.Write("<script>location.href='/Account/Login';</script>");
                 //filterContext.HttpContext.Response.Redirect("/Account/Login");//否则跳转至登陆页
             }
         }

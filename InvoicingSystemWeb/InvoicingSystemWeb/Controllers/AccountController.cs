@@ -82,8 +82,8 @@ namespace InvoicingSystemWeb.Controllers
         }
 
         #region Employer
-        //[Authentication]
-        //[UserPermission]
+        [Authentication]
+        [UserPermission]
         public ActionResult Employer()
         {
             return View();
@@ -104,7 +104,7 @@ namespace InvoicingSystemWeb.Controllers
             , JsonRequestBehavior.AllowGet);
         }
         [HttpGet]
-        //[Authentication]
+        [Authentication]
         public ActionResult AddEmployer()
         {
             string statusCode = "";
@@ -114,7 +114,7 @@ namespace InvoicingSystemWeb.Controllers
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
-        //[Authentication]
+        [Authentication]
         public ActionResult AddEmployer(EmployeModel model)
         {
 
@@ -131,6 +131,40 @@ namespace InvoicingSystemWeb.Controllers
                 return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
             }
 
+        }
+        #endregion
+        #region Role
+        [Authentication]
+        [UserPermission]
+        public ActionResult Role()
+        {
+            return View();
+        }
+        public ActionResult RoleList()
+        {
+            int pageSize = 20;
+            int pageIndex = (GetPageIndex() / pageSize) + 1;
+
+            //List<Sys_ButtonModel> list = new List<Sys_ButtonModel>();
+            string url = string.Format("{0}/Account/GetRoleList?pageIndex={1}&pageSize={2}", ConfigurationManager.AppSettings["APIAddress"], pageIndex, pageSize);
+            List<RoleModel> list = HttpClientHelpClass.GetResponse<List<RoleModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return Json(new
+            {
+                iDisplayStart = pageSize,
+                iTotalRecords = list.Count,
+                iTotalDisplayRecords = list.Count,
+                aaData = list
+            }
+            , JsonRequestBehavior.AllowGet);
+        }
+        [Authentication]
+        public ActionResult RoleAuth(Guid roleID)
+        {
+            string url = string.Format("{0}/Account/GetRoleAuth?roleID={1}", ConfigurationManager.AppSettings["APIAddress"], roleID);
+            AuthModel model = HttpClientHelpClass.GetResponse<AuthModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            //AuthModel model=new AuthModel();
+      
+            return PartialView("RoleAuthForm", model);
         }
         #endregion
 

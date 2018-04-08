@@ -1,6 +1,7 @@
 ﻿using Common;
 using DataModel;
 using InvoicingSystemWeb.Filters;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace InvoicingSystemWeb.Controllers
 {
-    
+
     public class ComponentController : BaseController
     {
         // GET: Component
@@ -30,7 +31,7 @@ namespace InvoicingSystemWeb.Controllers
             {
                 menu.menuName = "<i class='fa fa-fw fa-minus treeMinus' data-up='0' data-menuid='" + menu.menuID.ToString() + "'></i>" + menu.menuName;
                 resultList.Add(menu);
-                foreach(Sys_MenuModel subMenu in menu.subMenuList)
+                foreach (Sys_MenuModel subMenu in menu.subMenuList)
                 {
                     subMenu.menuName = "<i data-up='1' data-parentid='" + subMenu.parentID.ToString() + "'></i>" + subMenu.menuName;
                     resultList.Add(subMenu);
@@ -72,8 +73,8 @@ namespace InvoicingSystemWeb.Controllers
             {
                 string url = string.Format("{0}/Component/InsertMenu", ConfigurationManager.AppSettings["APIAddress"]);
                 string statusCode = string.Empty;
-                bool isSuccess =Convert.ToBoolean(HttpClientHelpClass.PostResponse<Sys_MenuModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
-                if(isSuccess)
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<Sys_MenuModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
                 {
                     return Json(new OperationResult(OperationResultType.Success, "添加成功！"));
                 }
@@ -82,7 +83,7 @@ namespace InvoicingSystemWeb.Controllers
                     return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
             }
@@ -91,7 +92,7 @@ namespace InvoicingSystemWeb.Controllers
         [Authentication]
         public ActionResult ModifyMenu(Guid id)
         {
-            string url = string.Format("{0}/Component/GetMenu?id={1}", ConfigurationManager.AppSettings["APIAddress"],id);
+            string url = string.Format("{0}/Component/GetMenu?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
             Sys_MenuModel model = HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return PartialView("MenuForm", model);
         }
@@ -141,6 +142,48 @@ namespace InvoicingSystemWeb.Controllers
                 return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
             }
         }
+        [Authentication]
+        [HttpGet]
+        public ActionResult SetMenuButton(Guid id)
+        {
+            string url = string.Format("{0}/Component/GetButtonByMenu?menuID={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+            List<MenuButtonModel> btnlist = HttpClientHelpClass.GetResponse<List<MenuButtonModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            ViewBag.btn = btnlist;
+            //List<Sys_MenuButton> list = new List<Sys_MenuButton>();
+            //AuthenticationBll bll = new AuthenticationBll();
+            //list = bll.GetMenuButtonByID().Where(t => t.fk_menuID == id).ToList();
+            //List<int> SelectBtn = new List<int>();
+            //foreach (var model in list)
+            //{
+            //    SelectBtn.Add(model.fk_btnID);
+            //}
+            //ViewBag.SelectBtnID = SelectBtn;
+            return View(id);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult SetMenuButton(string jasonData)
+        {
+            try
+            {
+                List<MenuButtonModel> list = JsonConvert.DeserializeObject<List<MenuButtonModel>>(jasonData);
+                string url = string.Format("{0}/Component/SetMenuButton", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<List<MenuButtonModel>>(url, list, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Error, "添加失败！", e.Message));
+            }
+        }
         #region 加载按钮一级菜单
         private List<SelectListItem> GetMenuSelectList()
         {
@@ -148,7 +191,7 @@ namespace InvoicingSystemWeb.Controllers
             menuList.Add(new SelectListItem { Text = "无", Value = "" });
             string url = string.Format("{0}/Component/GetMenuList", ConfigurationManager.AppSettings["APIAddress"]);
             List<Sys_MenuModel> list = HttpClientHelpClass.GetResponse<List<Sys_MenuModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
-            IEnumerable<Sys_MenuModel > Enum = list.Where(t => t.menuLevel == 1);
+            IEnumerable<Sys_MenuModel> Enum = list.Where(t => t.menuLevel == 1);
             foreach (var model in Enum)
             {
                 menuList.Add(new SelectListItem { Text = model.menuName, Value = model.menuID.ToString() });
@@ -158,6 +201,29 @@ namespace InvoicingSystemWeb.Controllers
         #endregion
         #endregion
         #region button
+        [UserPermission]
+        [Authentication]
+        public ActionResult Button()
+        {
+            return View();
+        }
+        public ActionResult ButtonList()
+        {
+            int pageSize = 20;
+            int pageIndex = (GetPageIndex() / pageSize) + 1;
+            
+            //List<Sys_ButtonModel> list = new List<Sys_ButtonModel>();
+            string url = string.Format("{0}/Component/GetButtonList?pageIndex={1}&pageSize={2}", ConfigurationManager.AppSettings["APIAddress"], pageIndex, pageSize);
+            List<Sys_ButtonModel> list = HttpClientHelpClass.GetResponse<List<Sys_ButtonModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return Json(new
+            {
+                iDisplayStart = pageSize,
+                iTotalRecords = list.Count,
+                iTotalDisplayRecords = list.Count,
+                aaData = list
+            }
+            , JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         [Authentication]
         public ActionResult AddButton()
