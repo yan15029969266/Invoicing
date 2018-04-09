@@ -175,7 +175,7 @@ namespace InvoicingSystemWeb.Controllers
                 AuthModel model = JsonConvert.DeserializeObject<AuthModel>(jasonData);
                 string url = string.Format("{0}/Component/SetMenuButton", ConfigurationManager.AppSettings["APIAddress"]);
                 string statusCode = string.Empty;
-                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<AuthModel>(url, list, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<AuthModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
                 if (isSuccess)
                 {
                     return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
