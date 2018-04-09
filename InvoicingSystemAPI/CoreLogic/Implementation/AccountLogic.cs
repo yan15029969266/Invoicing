@@ -101,6 +101,72 @@ namespace CoreLogic.Implementation
                 return model;
             }
         }
+        public bool SetRoleAuth(AuthModel model)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
+                {
+                    string query = "";
+                    foreach (PMenuAuth menu in model.menuList)
+                    {
+                        if(menu.isSelected)
+                        {
+                            IEnumerable<Sys_MenuPermissions> pMenuList = conn.GetList<Sys_MenuPermissions>(new { fk_roleID = model.roleId, fk_menuID = menu.menuID }, tranc);
+                            if (pMenuList.Count() <= 0)
+                            {
+                                Sys_MenuPermissions sys_MenuPermissions = new Sys_MenuPermissions { id = Guid.NewGuid(), fk_menuID = menu.menuID, fk_roleID = model.roleId };
+                                conn.Insert<Guid>(sys_MenuPermissions, tranc);
+                            }
+                        }
+                        else
+                        {
+                            conn.DeleteList<Sys_MenuPermissions>(new { fk_roleID = model.roleId, fk_menuID = menu.menuID }, tranc);
+                        }
+                        foreach (CMenuAuth cmenu in menu.cmenuList)
+                        {
+                            if (cmenu.isSelected)
+                            {
+                                IEnumerable<Sys_MenuPermissions> cMenuList = conn.GetList<Sys_MenuPermissions>(new { fk_roleID = model.roleId, fk_menuID = cmenu.menuID }, tranc);
+                                if (cMenuList.Count() <= 0)
+                                {
+                                    Sys_MenuPermissions sys_MenuPermissions = new Sys_MenuPermissions { id = Guid.NewGuid(), fk_menuID = cmenu.menuID, fk_roleID = model.roleId };
+                                    conn.Insert<Guid>(sys_MenuPermissions, tranc);
+                                }
+                            }
+                            else
+                            {
+                                conn.DeleteList<Sys_MenuPermissions>(new { fk_roleID = model.roleId, fk_menuID = cmenu.menuID }, tranc);
+                            }
+                            foreach (ButtonAuth btn in cmenu.buttonList)
+                            {
+                                if(btn.isSelected)
+                                {
+                                    IEnumerable<Sys_ButtonPermissions> bList = conn.GetList<Sys_ButtonPermissions>(new { fk_roleID = model.roleId, fk_menu_btnID = btn.menu_btnID }, tranc);
+                                    if (bList.Count() <= 0)
+                                    {
+                                        Sys_ButtonPermissions sys_ButtonPermissions = new Sys_ButtonPermissions { id = Guid.NewGuid(), fk_menu_btnID = btn.menu_btnID, fk_roleID = model.roleId };
+                                        conn.Insert<Guid>(sys_ButtonPermissions, tranc);
+                                    }
+                                }
+                                else
+                                {
+                                    conn.DeleteList<Sys_ButtonPermissions>(new { fk_roleID = model.roleId, fk_menu_btnID = btn.menu_btnID }, tranc);
+                                }
+                            }
+                        }
+                    }
+                    tranc.Commit();
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    tranc.Rollback();
+                    return false;
+                }
+            }
+        }
         #endregion
         #region Employer
         public Employe Login(string account, string pwd)

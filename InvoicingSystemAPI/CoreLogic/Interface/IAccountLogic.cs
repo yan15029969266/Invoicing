@@ -17,6 +17,7 @@ namespace CoreLogic.Interface
         bool UpdateRole(Role role);
         bool DeleteRole(Guid id);
         AuthModel GetRoleAuth(Guid roleID);
+        bool SetRoleAuth(AuthModel model);
         #endregion
         #region Employer
         Employe Login(string account, string pwd);
@@ -27,6 +28,8 @@ namespace CoreLogic.Interface
         string GetNewEmployeNo();
         #endregion
 
-        
+
+
+       
     }
 }

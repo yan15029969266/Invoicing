@@ -91,6 +91,7 @@ namespace InvoicingSystemAPI.Controllers
             List<Sys_MenuModel> reusltList = new List<Sys_MenuModel>();
             var MainMenu = from menu in list
                            where menu.menuLevel == 1
+                           orderby menu.sort
                            select new Sys_MenuModel
                            {
                                menuID = menu.menuID,

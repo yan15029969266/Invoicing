@@ -84,14 +84,14 @@
 <script>
     function AuthModel() {
 
-        this.roleId = @Model.roleId;
+        this.roleId = '@Model.roleId';
         var pMenuList=[];
         $('.pmenu').each(function () {
             var thisItem = $(this);
             var pMenuIsSelected = false;
             if (thisItem.find(".pmenu_check").is(':checked'))
             {
-                PmenuisSelected = true;
+                pMenuIsSelected = true;
             }
             var cmenuList=[];
             thisItem.find(".subRow").each(function(){
@@ -125,7 +125,7 @@
             pMenuList.push({
                 menuID:thisItem.find(".pmenuID").val(),
                 menuName:thisItem.find(".pmenuName").val(),
-                isSelected:pMenuIsSelected,
+                isSelected: pMenuIsSelected,
                 cmenuList:cmenuList
             });
         });

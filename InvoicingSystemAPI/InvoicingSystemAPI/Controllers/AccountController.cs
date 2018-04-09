@@ -84,6 +84,13 @@ namespace InvoicingSystemAPI.Controllers
             IAccountLogic IUser = container.Resolve<IAccountLogic>();
             return IUser.GetRoleAuth(roleID);
         }
+        [HttpPost]
+        [Route("api/Account/SetRoleAuth")]
+        public bool SetRoleAuth(AuthModel model)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            return IUser.SetRoleAuth(model);
+        }
         #endregion
         #region Employe
 
