@@ -158,6 +158,7 @@ namespace InvoicingSystemWeb.Controllers
             , JsonRequestBehavior.AllowGet);
         }
         [Authentication]
+        [HttpGet]
         public ActionResult RoleAuth(Guid roleID)
         {
             string url = string.Format("{0}/Account/GetRoleAuth?roleID={1}", ConfigurationManager.AppSettings["APIAddress"], roleID);
@@ -165,6 +166,29 @@ namespace InvoicingSystemWeb.Controllers
             //AuthModel model=new AuthModel();
       
             return PartialView("RoleAuthForm", model);
+        }
+        [HttpPost]
+        public ActionResult RoleAuth(string jasonData)
+        {
+            try
+            {
+                AuthModel model = JsonConvert.DeserializeObject<AuthModel>(jasonData);
+                string url = string.Format("{0}/Component/SetMenuButton", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<AuthModel>(url, list, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Error, "修改失败！", e.Message));
+            }
         }
         #endregion
 

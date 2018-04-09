@@ -897,6 +897,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ComponentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Extension\AtuhException.cs" />
     <Compile Include="Extension\ExpandJsonResult.cs" />
     <Compile Include="Filters\AuthenticationAttribute.cs" />
@@ -980,6 +981,7 @@
     <Content Include="Views\Component\Button.cshtml" />
     <Content Include="Views\Account\Role.cshtml" />
     <Content Include="Views\Account\RoleAuthForm.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

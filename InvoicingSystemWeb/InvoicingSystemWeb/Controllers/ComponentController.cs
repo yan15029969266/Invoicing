@@ -181,7 +181,7 @@ namespace InvoicingSystemWeb.Controllers
             }
             catch (Exception e)
             {
-                return Json(new OperationResult(OperationResultType.Error, "添加失败！", e.Message));
+                return Json(new OperationResult(OperationResultType.Error, "修改失败！", e.Message));
             }
         }
         #region 加载按钮一级菜单

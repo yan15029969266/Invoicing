@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<button onclick="test()">Test</button>
+<script src="~/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+
+<script>
+    function AuthModel() {
+
+        this.roleId = 1234;
+        var pMenuList=[];
+        var cmenuList=[];
+        var buttonList=[];
+
+        buttonList.push({
+            menu_btnID:"1",
+            btnName:"按钮1",
+            isSelected:true
+        });
+        buttonList.push({
+            menu_btnID:"2",
+            btnName:"按钮2",
+            isSelected:true
+        });
+
+        cmenuList.push({
+            menuID:"1",
+            menuName:"子菜单1",
+            isSelected:true,
+            buttonList:buttonList
+        });
+        cmenuList.push({
+            menuID:"2",
+            menuName:"子菜单2",
+            isSelected:true,
+            buttonList:buttonList
+        });
+
+        pMenuList.push({
+            menuID:"1",
+            menuName:"主菜单",
+            isSelected:true,
+            cmenuList:cmenuList
+        });
+        this.menuList = pMenuList;
+
+    }
+    function test(){
+        var jsonObj=new AuthModel();
+        var jasonData = JSON.stringify(jsonObj);
+        alert(jasonData);
+        //alert(jasonData);
+        //var jsonObj = JSON.parse(jasonData);
+        //alert(jsonObj);
+        //$.post('SetMenuButton', {
+        //    jasonData: jasonData, //直接提交json数组
+        //}, function (data) {
+        //    alert(data);
+        //});
+    }
+</script>
+

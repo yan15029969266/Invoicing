@@ -22,15 +22,17 @@
     @{
         foreach (PMenuAuth pm in @Model.menuList)
         {
-            <div class="row" style="line-height:30px;border: 1px solid #808080">
+            <div class="row pmenu" style="line-height:30px;border: 1px solid #808080">
                 <div class="col-xs-2" style="border-right: 1px solid #808080">
+                    <input class="pmenuID hidden" value="@pm.menuID" />
+                    <input class="pmenuName hidden" value="@pm.menuName" />
                     @{if (pm.isSelected)
                     {
-                        <input type="checkbox" class="menu_check" checked="checked" value="@pm.menuID" />@pm.menuName
+                        <input type="checkbox" class="pmenu_check" checked="checked"/>@pm.menuName
                     }
                     else
                     {
-                        <input type="checkbox" class="menu_check" value="@pm.menuID" />@pm.menuName
+                        <input type="checkbox" class="pmenu_check"/>@pm.menuName
                     }
                     }
 
@@ -39,22 +41,26 @@
                     @{
             foreach (CMenuAuth cm in pm.cmenuList)
             {
-                <div class="row" style="line-height:30px; border-top: 1px solid #808080;border-right: 1px solid #808080">
+                <div class="row subRow" style="line-height:30px; border-top: 1px solid #808080;border-right: 1px solid #808080">
                     <div class="col-xs-2" style="border-right: 1px solid #808080">
+                        <input class="cmenuID hidden" value="@cm.menuID" />
+                        <input class="cmenuName hidden" value="@cm.menuName" />
                         @if (cm.isSelected)
                         {
-                            <input type="checkbox" class="menu_check" checked="checked" value="@cm.menuID" />@cm.menuName
+                            <input type="checkbox" class="cmenu_check" checked="checked"/>@cm.menuName
                         }
                         else
                         {
-                            <input type="checkbox" class="menu_check" value="@cm.menuID" />@cm.menuName
+                            <input type="checkbox" class="cmenu_check"/>@cm.menuName
                         }
                     </div>
 
                     <div class="col-xs-10">
                         @foreach (ButtonAuth btn in cm.buttonList)
                         {
-                            <div class="col-xs-3">
+                            <div class="col-xs-3 btnDiv">
+                                <input class="mButtonID hidden" value="@btn.menu_btnID" />
+                                <input class="buttonName hidden" value="@btn.btnName" />
                                 @if (btn.isSelected)
                                 {
                                     <input class="button_check" checked="checked" type="checkbox" value="@btn.menu_btnID" />@btn.btnName
@@ -75,3 +81,61 @@
         }
     }
 </div>
+<script>
+    function AuthModel() {
+
+        this.roleId = @Model.roleId;
+        var pMenuList=[];
+        $('.pmenu').each(function () {
+            var thisItem = $(this);
+            var pMenuIsSelected = false;
+            if (thisItem.find(".pmenu_check").is(':checked'))
+            {
+                PmenuisSelected = true;
+            }
+            var cmenuList=[];
+            thisItem.find(".subRow").each(function(){
+                var subItem=$(this);
+                var cMenuIsSelected = false;
+                if (subItem.find(".cmenu_check").is(':checked'))
+                {
+                    cMenuIsSelected = true;
+                }
+                var buttonList=[];
+                subItem.find(".btnDiv").each(function(){
+                    var btnItem=$(this);
+                    var buttonSelected=false;
+                    if (btnItem.find(".button_check").is(':checked'))
+                    {
+                        buttonSelected = true;
+                    }
+                    buttonList.push({
+                        menu_btnID:btnItem.find(".mButtonID").val(),
+                        btnName:btnItem.find(".buttonName").val(),
+                        isSelected:buttonSelected
+                    });
+                });
+                cmenuList.push({
+                    menuID:subItem.find(".cmenuID").val(),
+                    menuName:subItem.find(".cmenuName").val(),
+                    isSelected:cMenuIsSelected,
+                    buttonList:buttonList
+                });
+            });
+            pMenuList.push({
+                menuID:thisItem.find(".pmenuID").val(),
+                menuName:thisItem.find(".pmenuName").val(),
+                isSelected:pMenuIsSelected,
+                cmenuList:cmenuList
+            });
+        });
+        this.menuList = pMenuList;
+
+    }
+
+    function Save() {
+        var jsonObj = new AuthModel();
+        var jasonData = JSON.stringify(jsonObj);
+        SaveModal(oTable, null, {jasonData:jasonData})
+    }
+</script>
