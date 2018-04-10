@@ -17,6 +17,7 @@
                             <tr>
                                 <th>名称</th>
                                 <th>方法</th>
+                                <th>序号</th>
                                 <th>状态</th>
                             </tr>
                         </thead>
@@ -31,18 +32,19 @@
 
 
 @*<script src="~/plugins/jQuery/jQuery-2.1.4.min.js"></script>*@
-<script src="~/Script/wwt.js"></script>
+<script src="~/Script/mySite.js"></script>
 <script>
     var oTable;
     var aoColumns = [
           { "data": "btnName" },
           { "data": "func" },
+          { "data": "sort" },
           { "data": "status" }];
     $(document).ready(function () {
         oTable = InitDatatables($("#data-table"), "@Url.Action("ButtonList")?rand=" + Math.random(), aoColumns, oTable);
     });
     function Add() {
-        ShowModal("@Url.Action("ButtonForm")", {}, "添加按钮", 2);
+        ShowModal("@Url.Action("AddButton")", {}, "添加按钮", 2);
     }
     function Delete() {
         var id = getSelectRow(oTable, "btnId");

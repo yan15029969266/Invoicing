@@ -130,16 +130,16 @@ namespace InvoicingSystemWeb.Controllers
                 bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]));
                 if (isSuccess)
                 {
-                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
                 }
                 else
                 {
-                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
                 }
             }
             catch (Exception e)
             {
-                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
             }
         }
         [Authentication]
@@ -255,6 +255,62 @@ namespace InvoicingSystemWeb.Controllers
                 return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
             }
         }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyButton(Guid Id)
+        {
+            string url = string.Format("{0}/Component/GetButton?btnID={1}", ConfigurationManager.AppSettings["APIAddress"],Id);
+            Sys_ButtonModel model = HttpClientHelpClass.GetResponse<Sys_ButtonModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("ButtonForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ModifyButton(Sys_ButtonModel model)
+        {
+            UpdateBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Component/UpdateButton", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<Sys_ButtonModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "修改失败！", e.Message));
+            }
+        }
+
+        [Authentication]
+        public ActionResult DeleteButton(Guid id)
+        {
+            try
+            {
+                string url = string.Format("{0}/Component/DeleteButton?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                string statusCode = "";
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
+            }
+        } 
         #endregion
     }
 }

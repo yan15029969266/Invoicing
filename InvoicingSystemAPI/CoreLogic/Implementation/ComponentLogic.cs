@@ -173,13 +173,23 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
         {
             using (IDbConnection conn = OpenConnection())
             {
-                int row = conn.Delete<Sys_Button>(id);
-                if (row > 0)
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
                 {
+                    IEnumerable<Sys_MenuButton> list = conn.GetList<Sys_MenuButton>(new { fk_btnID = id },tranc);
+                    foreach(Sys_MenuButton model in list)
+                    {
+                        conn.DeleteList<Sys_ButtonPermissions>(new { fk_menu_btnID = model.fk_menuID }, tranc);
+                    }
+                    conn.DeleteList<Sys_MenuButton>(new { fk_btnID = id },tranc);
+                    conn.Delete<Sys_Button>(id,tranc);
+                    tranc.Commit();
                     return true;
+                    
                 }
-                else
+                catch(Exception e)
                 {
+                    tranc.Rollback();
                     return false;
                 }
             }
@@ -194,7 +204,7 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                 }
                 else
                 {
-                    return conn.GetListPaged<Sys_Button>(pageIndex, pageSize, "where 1=1", "ctime").ToList();
+                    return conn.GetListPaged<Sys_Button>(pageIndex, pageSize, "where 1=1", "sort").ToList();
                 }
             }
         }
@@ -229,6 +239,13 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                     tranc.Rollback();
                     return false;
                 }
+            }
+        }
+        public Sys_Button GetButton(Guid btnID)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.Get<Sys_Button>(btnID);
             }
         }
         #endregion

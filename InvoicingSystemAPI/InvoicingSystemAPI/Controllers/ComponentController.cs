@@ -183,6 +183,7 @@ namespace InvoicingSystemAPI.Controllers
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();
             return IComponent.UpdateButton(button);
         }
+        [HttpGet]
         [Route("api/Component/DeleteButton")]
         public bool DeleteButton(Guid id)
         {
@@ -195,6 +196,17 @@ namespace InvoicingSystemAPI.Controllers
         {
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();
             return IComponent.SetMenuButton(list);
+        }
+
+        [HttpGet]
+        [Route("api/Component/GetButton")]
+        public Sys_ButtonModel GetButton(Guid btnID)
+        {
+            IComponentLogic IComponent = container.Resolve<IComponentLogic>();
+            Sys_Button btn = IComponent.GetButton(btnID);
+            Mapper.CreateMap<Sys_Button, Sys_ButtonModel>(); // 配置
+            Sys_ButtonModel model = Mapper.Map<Sys_Button, Sys_ButtonModel>(btn); // 使用AutoMapper自动映射
+            return model;
         }
         #endregion
     }

@@ -27,8 +27,11 @@ namespace CoreLogic.Interface
         bool UpdateButton(Sys_Button button);
         bool DeleteButton(Guid id);
         bool SetMenuButton(List<MenuButtonModel> list);
+        Sys_Button GetButton(Guid btnID);
         #endregion
 
-       
+
+
+        
     }
 }
