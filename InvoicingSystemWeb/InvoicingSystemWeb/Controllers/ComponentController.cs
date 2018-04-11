@@ -126,8 +126,9 @@ namespace InvoicingSystemWeb.Controllers
         {
             try
             {
+                string statusCode = "";
                 string url = string.Format("{0}/Component/DeleteMenu?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
-                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]));
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"],out statusCode));
                 if (isSuccess)
                 {
                     return Json(new OperationResult(OperationResultType.Success, "删除成功！"));

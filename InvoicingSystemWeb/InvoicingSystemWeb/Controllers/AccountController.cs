@@ -81,7 +81,7 @@ namespace InvoicingSystemWeb.Controllers
             return Redirect("/Account/Login");
         }
 
-        #region Employer
+          #region Employer
         [Authentication]
         [UserPermission]
         public ActionResult Employer()
@@ -132,6 +132,60 @@ namespace InvoicingSystemWeb.Controllers
             }
 
         }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyEmployer(Guid id)
+        {
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+            EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("EmployerForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ModifyEmployer(EmployeModel model)
+        {
+            UpdateBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/UpdateEmploye", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<EmployeModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+            }
+        }
+        [Authentication]
+        public ActionResult DeleteEmployer(Guid id)
+        {
+            try
+            {
+                string statusCode = "";
+                string url = string.Format("{0}/Account/DeleteEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
+            }
+        }
         #endregion
         #region Role
         [Authentication]
@@ -164,7 +218,7 @@ namespace InvoicingSystemWeb.Controllers
             string url = string.Format("{0}/Account/GetRoleAuth?roleID={1}", ConfigurationManager.AppSettings["APIAddress"], roleID);
             AuthModel model = HttpClientHelpClass.GetResponse<AuthModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             //AuthModel model=new AuthModel();
-      
+
             return PartialView("RoleAuthForm", model);
         }
         [HttpPost]
@@ -189,6 +243,92 @@ namespace InvoicingSystemWeb.Controllers
             catch (Exception e)
             {
                 return Json(new OperationResult(OperationResultType.Error, "修改失败！", e.Message));
+            }
+        }
+        [HttpGet]
+        [Authentication]
+        public ActionResult AddRole()
+        {
+            RoleModel model = new RoleModel { roleID = Guid.NewGuid() };
+            return PartialView("RoleForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult AddRole(RoleModel model)
+        {
+            InsertBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/InsertRole", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<RoleModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "添加成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+            }
+        }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyRole(Guid Id)
+        {
+            string url = string.Format("{0}/Account/GetRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], Id);
+            Sys_MenuModel model = HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("RoleForm", model);
+        }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyRole(RoleModel model)
+        {
+            UpdateBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/UpdateRole", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<RoleModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+            }
+        }
+        [Authentication]
+        public ActionResult DeleteRole(Guid id)
+        {
+            try
+            {
+                string statusCode = "";
+                string url = string.Format("{0}/Account/DeleteRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"],out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
             }
         }
         #endregion

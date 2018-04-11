@@ -91,6 +91,16 @@ namespace InvoicingSystemAPI.Controllers
             IAccountLogic IUser = container.Resolve<IAccountLogic>();
             return IUser.SetRoleAuth(model);
         }
+        [HttpGet]
+        [Route("api/Account/GetRole")]
+        public RoleModel GetRole(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Role role = IComponent.GetRole(id);
+            Mapper.CreateMap<Role, RoleModel>(); // 配置
+            RoleModel model = Mapper.Map<Role, RoleModel>(role); // 使用AutoMapper自动映射
+            return model;
+        }
         #endregion
         #region Employe
 
@@ -114,9 +124,9 @@ namespace InvoicingSystemAPI.Controllers
             //执行
             return IUser.InsertEmploye(e);
         }
-        [Route("api/Account/UpdateRole")]
+        [Route("api/Account/UpdateEmploye")]
         [HttpPost]
-        public bool UpdateRole([FromBody]EmployeModel model)
+        public bool UpdateEmploye([FromBody]EmployeModel model)
         {
             Mapper.CreateMap<EmployeModel, Employe>(); // 配置
             Employe e = Mapper.Map<EmployeModel, Employe>(model); // 使用AutoMapper自动映射
@@ -141,6 +151,16 @@ namespace InvoicingSystemAPI.Controllers
             HttpResponseMessage responseMessage = new HttpResponseMessage { Content = new StringContent(IUser.GetNewEmployeNo(), Encoding.GetEncoding("UTF-8"), "text/plain") };
             return responseMessage;
             //return IUser.GetNewEmployeNo();
+        }
+        [HttpGet]
+        [Route("api/Account/GetEmploye")]
+        public EmployeModel GetEmploye(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Employe employe = IComponent.GetEmploye(id);
+            Mapper.CreateMap<Employe, EmployeModel>(); // 配置
+            EmployeModel model = Mapper.Map<Employe, EmployeModel>(employe);
+            return model;
         }
         #endregion
     }

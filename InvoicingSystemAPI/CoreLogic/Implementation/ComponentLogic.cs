@@ -83,16 +83,23 @@ namespace CoreLogic.Implementation
                 IDbTransaction tranc = conn.BeginTransaction();
                 try
                 {
-                    Sys_Menu menu = conn.Get<Sys_Menu>(id,tranc);
+                    Sys_Menu menu = conn.Get<Sys_Menu>(id, tranc);
                     int row = 0;
                     if (menu.menuLevel > 1)
                     {
-                        row = conn.Delete<Sys_Menu>(id,tranc);
+                        row = conn.Delete<Sys_Menu>(id, tranc);
+                        row += DeleteMenuRelation(id, conn, tranc);
                     }
                     else
                     {
-                        row = conn.DeleteList<Sys_Menu>(new { parentID=menu.menuID }, tranc);
+                        IEnumerable<Sys_Menu> list = conn.GetList<Sys_Menu>(new { parentID = menu.menuID }, tranc);
+                        foreach (Sys_Menu model in list)
+                        {
+                             row += DeleteMenuRelation(model.menuID, conn, tranc);
+                        }
+                        row += conn.DeleteList<Sys_Menu>(new { parentID = menu.menuID }, tranc);
                         row += conn.Delete<Sys_Menu>(id, tranc);
+                        DeleteMenuRelation(id, conn, tranc);
                     }
                     tranc.Commit();
                     if (row > 0)
@@ -110,6 +117,19 @@ namespace CoreLogic.Implementation
                     return false;
                 }
             }
+        }
+        private int DeleteMenuRelation(Guid menuID, IDbConnection conn, IDbTransaction tranc)
+        {
+            int row = 0;
+            IEnumerable<Sys_MenuButton> list = conn.GetList<Sys_MenuButton>(new { fk_menuID = menuID }, tranc);
+            foreach (Sys_MenuButton model in list)
+            {
+                row += conn.DeleteList<Sys_ButtonPermissions>(new { fk_menu_btnID = model.fk_menuID }, tranc);
+            }
+            row += conn.DeleteList<Sys_MenuButton>(new { fk_menuID = menuID }, tranc);
+            row += conn.DeleteList<Sys_MenuPermissions>(new { fk_menuID = menuID }, tranc);
+
+            return row;
         }
         #endregion
         #region button
@@ -176,25 +196,25 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                 IDbTransaction tranc = conn.BeginTransaction();
                 try
                 {
-                    IEnumerable<Sys_MenuButton> list = conn.GetList<Sys_MenuButton>(new { fk_btnID = id },tranc);
-                    foreach(Sys_MenuButton model in list)
+                    IEnumerable<Sys_MenuButton> list = conn.GetList<Sys_MenuButton>(new { fk_btnID = id }, tranc);
+                    foreach (Sys_MenuButton model in list)
                     {
                         conn.DeleteList<Sys_ButtonPermissions>(new { fk_menu_btnID = model.fk_menuID }, tranc);
                     }
-                    conn.DeleteList<Sys_MenuButton>(new { fk_btnID = id },tranc);
-                    conn.Delete<Sys_Button>(id,tranc);
+                    conn.DeleteList<Sys_MenuButton>(new { fk_btnID = id }, tranc);
+                    conn.Delete<Sys_Button>(id, tranc);
                     tranc.Commit();
                     return true;
-                    
+
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     tranc.Rollback();
                     return false;
                 }
             }
         }
-        public List<Sys_Button> GetButtonList(int pageIndex,int pageSize)
+        public List<Sys_Button> GetButtonList(int pageIndex, int pageSize)
         {
             using (IDbConnection conn = OpenConnection())
             {
@@ -234,7 +254,7 @@ WHERE a.fk_roleID=@roleID AND fk_menuID=@menuID";
                     tranc.Commit();
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     tranc.Rollback();
                     return false;

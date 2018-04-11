@@ -56,13 +56,25 @@ namespace CoreLogic.Implementation
         {
             using (IDbConnection conn = OpenConnection())
             {
-                int row = conn.Delete<Role>(id);
-                if (row > 0)
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
                 {
-                    return true;
+                    int row = conn.Delete<Role>(id,tranc);
+                    row += conn.Delete<Sys_MenuPermissions>(new { fk_roleID = id },tranc);
+                    row += conn.Delete<Sys_ButtonPermissions>(new { fk_roleID = id }, tranc);
+                    tranc.Commit();
+                    if (row > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-                else
+                catch(Exception ex)
                 {
+                    tranc.Rollback();
                     return false;
                 }
             }
@@ -167,6 +179,13 @@ namespace CoreLogic.Implementation
                 }
             }
         }
+        public Role GetRole(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.Get<Role>(id);
+            }
+        }
         #endregion
         #region Employer
         public Employe Login(string account, string pwd)
@@ -252,6 +271,13 @@ namespace CoreLogic.Implementation
                     }
                 }
                 return NewNo;
+            }
+        }
+        public Employe GetEmploye(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                return conn.Get<Employe>(id);
             }
         }
         #endregion

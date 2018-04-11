@@ -983,6 +983,7 @@
     <Content Include="Views\Account\RoleAuthForm.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Component\ButtonForm.cshtml" />
+    <Content Include="Views\Account\RoleForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
