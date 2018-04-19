@@ -79,6 +79,7 @@ namespace InvoicingSystemAPI.Controllers
             IComponentLogic IComponent = container.Resolve<IComponentLogic>();
             return IComponent.UpdateMenu(menu);
         }
+        [HttpGet]
         [Route("api/Component/DeleteMenu")]
         public bool DeleteMenu(Guid id)
         {

@@ -18,6 +18,7 @@ namespace DBDataModel
         public string employeAccount { get; set; }
         public string employePwd { get; set; }
         public DateTime entryTime { get; set; }
+        public string employPhone { get; set; }
         public string employeImage { get; set; }
         public Guid fk_roleID { get; set; }
         //public int fk_areaID { get; set; }

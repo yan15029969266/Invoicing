@@ -29,9 +29,12 @@ namespace CoreLogic.Interface
         string GetNewEmployeNo();
         Employe GetEmploye(Guid id);
         #endregion
-
-
-
-
+        #region Organize
+        List<Organize> GetOrganizeList();
+        Organize GetOrganize(Guid id);
+        bool InsertOrganize(OrganizeModel model);
+        bool UpdateOrganize(OrganizeModel model);
+        bool DeleteOrganize(Guid id);
+        #endregion
     }
 }

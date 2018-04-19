@@ -13,13 +13,20 @@ namespace CoreLogic.Implementation
 {
     public class AccountLogic : BasicOperation, IAccountLogic
     {
-        
+
         #region Role
         public List<Role> GetRoleList(int pageIndex, int pageSize)
         {
             using (IDbConnection conn = OpenConnection())
             {
-                return conn.GetListPaged<Role>(pageIndex,pageSize,"where 1=1","ctime").ToList();
+                if (pageIndex == -1 && pageSize == -1)
+                {
+                    return conn.GetList<Role>().ToList();
+                }
+                else 
+                {
+                    return conn.GetListPaged<Role>(pageIndex, pageSize, "where 1=1", "ctime").ToList();
+                }
             }
         }
         public bool InsertRole(Role role)
@@ -59,9 +66,9 @@ namespace CoreLogic.Implementation
                 IDbTransaction tranc = conn.BeginTransaction();
                 try
                 {
-                    int row = conn.Delete<Role>(id,tranc);
-                    row += conn.Delete<Sys_MenuPermissions>(new { fk_roleID = id },tranc);
-                    row += conn.Delete<Sys_ButtonPermissions>(new { fk_roleID = id }, tranc);
+                    int row = conn.Delete<Role>(id, tranc);
+                    row += conn.DeleteList<Sys_MenuPermissions>(new { fk_roleID = id }, tranc);
+                    row += conn.DeleteList<Sys_ButtonPermissions>(new { fk_roleID = id }, tranc);
                     tranc.Commit();
                     if (row > 0)
                     {
@@ -72,7 +79,7 @@ namespace CoreLogic.Implementation
                         return false;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     tranc.Rollback();
                     return false;
@@ -97,7 +104,7 @@ namespace CoreLogic.Implementation
                                     FROM dbo.Sys_Menu m
                                     LEFT JOIN (SELECT * FROM dbo.Sys_MenuPermissions WHERE fk_roleID=@roleId) mp ON m.menuID=mp.fk_menuID
                                     WHERE m.enable=1 AND m.parentID=@parentID ORDER BY m.sort";
-                    m.cmenuList = conn.Query<CMenuAuth>(sqlQuery, new { roleId = roleID, parentID=m.menuID }).ToList();
+                    m.cmenuList = conn.Query<CMenuAuth>(sqlQuery, new { roleId = roleID, parentID = m.menuID }).ToList();
                     foreach (CMenuAuth cm in m.cmenuList)
                     {
 
@@ -123,7 +130,7 @@ namespace CoreLogic.Implementation
                     string query = "";
                     foreach (PMenuAuth menu in model.menuList)
                     {
-                        if(menu.isSelected)
+                        if (menu.isSelected)
                         {
                             IEnumerable<Sys_MenuPermissions> pMenuList = conn.GetList<Sys_MenuPermissions>(new { fk_roleID = model.roleId, fk_menuID = menu.menuID }, tranc);
                             if (pMenuList.Count() <= 0)
@@ -153,7 +160,7 @@ namespace CoreLogic.Implementation
                             }
                             foreach (ButtonAuth btn in cmenu.buttonList)
                             {
-                                if(btn.isSelected)
+                                if (btn.isSelected)
                                 {
                                     IEnumerable<Sys_ButtonPermissions> bList = conn.GetList<Sys_ButtonPermissions>(new { fk_roleID = model.roleId, fk_menu_btnID = btn.menu_btnID }, tranc);
                                     if (bList.Count() <= 0)
@@ -172,7 +179,7 @@ namespace CoreLogic.Implementation
                     tranc.Commit();
                     return true;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     tranc.Rollback();
                     return false;
@@ -192,7 +199,7 @@ namespace CoreLogic.Implementation
         {
             using (IDbConnection conn = OpenConnection())
             {
-                return conn.GetList<Employe>(new { employeAccount = account, employePwd = pwd }).FirstOrDefault();
+                return conn.GetList<Employe>(new { employeAccount = account, employePwd = pwd, enable = true }).FirstOrDefault();
             }
         }
         public List<Employe> GetEmployeList(int pageIndex, int pageSize)
@@ -253,15 +260,15 @@ namespace CoreLogic.Implementation
             {
                 string NewNo = "";
                 string sqlQuery = "Select employeNo from Employe order by CAST(SUBSTRING(employeNo,2,LEN(employeNo))AS INT) DESC";
-                string lastNo=conn.Query<string>(sqlQuery).FirstOrDefault();
-                if(lastNo=="")
+                string lastNo = conn.Query<string>(sqlQuery).FirstOrDefault();
+                if (lastNo == "")
                 {
                     NewNo = "E00001";
                 }
                 else
                 {
                     int cout = Convert.ToInt32(lastNo.Substring(1));
-                    if(cout>99999)
+                    if (cout > 99999)
                     {
                         throw new Exception("员工编号超长，请联系管理员！");
                     }
@@ -278,6 +285,15 @@ namespace CoreLogic.Implementation
             using (IDbConnection conn = OpenConnection())
             {
                 return conn.Get<Employe>(id);
+            }
+        }
+        #endregion
+        #region Organize
+        public List<Organize> GetOrganizeList()
+        {
+            using(IDbConnection conn=OpenConnection())
+            {
+                return conn.GetList<Organize>().ToList();
             }
         }
         #endregion

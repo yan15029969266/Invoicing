@@ -16,6 +16,7 @@ namespace ViewDataModel
         public string employeAccount { get; set; }
         public string employePwd { get; set; }
         public DateTime entryTime { get; set; }
+        public string employPhone { get; set; }
         public string employeImage { get; set; }
         public Guid fk_roleID { get; set; }
         public bool enable { get; set; }

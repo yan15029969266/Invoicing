@@ -153,6 +153,7 @@
     <Content Include="dist\js\pages\dashboard.js" />
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="Global.asax" />
+    <Content Include="HtmlPage1.html" />
     <Content Include="plugins\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="plugins\bootstrap-slider\slider.css" />
     <Content Include="plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.js" />
@@ -808,12 +809,31 @@
     <Content Include="plugins\ionslider\ion.rangeSlider.min.js" />
     <Content Include="plugins\ionslider\ion.rangeSlider.skinFlat.css" />
     <Content Include="plugins\ionslider\ion.rangeSlider.skinNice.css" />
+    <Content Include="plugins\jOrgChart\css\jquery.jOrgChart.css" />
+    <Content Include="plugins\jOrgChart\jquery.jOrgChart.js" />
     <Content Include="plugins\jquery-validation\jquery.validate.js" />
     <Content Include="plugins\jquery-validation\jquery.validate.min.js" />
     <Content Include="plugins\jquery-validation\messages_zh.js" />
     <Content Include="plugins\jquery-validation\messages_zh.min.js" />
+    <Content Include="plugins\jqueryContextMenu\images\cut.png" />
+    <Content Include="plugins\jqueryContextMenu\images\door.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_add.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_copy.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_delete.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_edit.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_paste.png" />
+    <Content Include="plugins\jqueryContextMenu\jquery.contextMenu.css" />
+    <Content Include="plugins\jqueryContextMenu\jquery.contextMenu.js" />
+    <Content Include="plugins\jqueryContextMenu\jquery.ui.position.js" />
     <Content Include="plugins\jQueryUI\jquery-ui.js" />
     <Content Include="plugins\jQueryUI\jquery-ui.min.js" />
+    <Content Include="plugins\jqueryYoujian\css\contextMenu.css" />
+    <Content Include="plugins\jqueryYoujian\img\add.png" />
+    <Content Include="plugins\jqueryYoujian\img\copy.png" />
+    <Content Include="plugins\jqueryYoujian\img\del.png" />
+    <Content Include="plugins\jqueryYoujian\img\modify.png" />
+    <Content Include="plugins\jqueryYoujian\img\paste.png" />
+    <Content Include="plugins\jqueryYoujian\js\contextMenu.js" />
     <Content Include="plugins\jQuery\jQuery-2.1.4.min.js" />
     <Content Include="plugins\jvectormap\jquery-jvectormap-1.2.2.css" />
     <Content Include="plugins\jvectormap\jquery-jvectormap-1.2.2.min.js" />
@@ -984,6 +1004,8 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Component\ButtonForm.cshtml" />
     <Content Include="Views\Account\RoleForm.cshtml" />
+    <Content Include="Views\Account\Organize.cshtml" />
+    <Content Include="Test\test.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

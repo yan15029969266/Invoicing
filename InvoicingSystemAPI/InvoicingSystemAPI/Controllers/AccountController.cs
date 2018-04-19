@@ -70,6 +70,7 @@ namespace InvoicingSystemAPI.Controllers
             //执行
             return IUser.UpdateRole(role);
         }
+        [HttpGet]
         [Route("api/Account/DeleteRole")]
         public bool DeleteRole(Guid id)
         {
@@ -161,6 +162,49 @@ namespace InvoicingSystemAPI.Controllers
             Mapper.CreateMap<Employe, EmployeModel>(); // 配置
             EmployeModel model = Mapper.Map<Employe, EmployeModel>(employe);
             return model;
+        }
+        #endregion
+        #region Organize
+        [HttpGet]
+        [Route("api/Account/GetOrganizeList")]
+        public List<OrganizeModel> GetOrganizeList()
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            List<Organize> list = IComponent.GetOrganizeList();
+            Mapper.CreateMap<Organize, OrganizeModel>(); // 配置
+            List<OrganizeModel> resultList = Mapper.Map<List<Organize>, List<OrganizeModel>>(list); // 使用AutoMapper自动映射
+            return resultList;
+        }
+        [HttpGet]
+        [Route("api/Account/GetOrganize")]
+        public OrganizeModel GetOrganize(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Organize organize = IComponent.GetOrganize(id);
+            Mapper.CreateMap<Organize, OrganizeModel>(); // 配置
+            OrganizeModel model = Mapper.Map<Organize, OrganizeModel>(organize); // 使用AutoMapper自动映射
+            return model;
+        }
+        [Route("api/Account/InsertOrganize")]
+        [HttpPost]
+        public bool InsertOrganize([FromBody]OrganizeModel model)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            return IComponent.InsertOrganize(model);
+        }
+        [Route("api/Account/UpdateOrganize")]
+        [HttpPost]
+        public bool UpdateOrganize([FromBody]OrganizeModel model)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            return IComponent.UpdateOrganize(model);
+        }
+        [HttpGet]
+        [Route("api/Account/DeleteOrganize")]
+        public bool DeleteOrganize(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            return IComponent.DeleteOrganize(id);
         }
         #endregion
     }

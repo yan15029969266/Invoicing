@@ -81,7 +81,7 @@ namespace InvoicingSystemWeb.Controllers
             return Redirect("/Account/Login");
         }
 
-          #region Employer
+        #region Employer
         [Authentication]
         [UserPermission]
         public ActionResult Employer()
@@ -110,7 +110,10 @@ namespace InvoicingSystemWeb.Controllers
             string statusCode = "";
             EmployeModel model = new EmployeModel { employeID = Guid.NewGuid() };
             string url = string.Format("{0}/Account/GetNewEmployeNo", ConfigurationManager.AppSettings["APIAddress"]);
+            ViewBag.RoleList = GetRoleSelectList();
             model.employeNo = HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode);
+            model.entryTime = DateTime.Now;
+            model.employePwd = MD5HelpClass.CreateMD5Hash("1qaz!QAZ");
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
@@ -138,6 +141,7 @@ namespace InvoicingSystemWeb.Controllers
         {
             string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
             EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            ViewBag.RoleList = GetRoleSelectList();
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
@@ -186,6 +190,7 @@ namespace InvoicingSystemWeb.Controllers
                 return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
             }
         }
+
         #endregion
         #region Role
         [Authentication]
@@ -282,10 +287,10 @@ namespace InvoicingSystemWeb.Controllers
         public ActionResult ModifyRole(Guid Id)
         {
             string url = string.Format("{0}/Account/GetRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], Id);
-            Sys_MenuModel model = HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            RoleModel model = HttpClientHelpClass.GetResponse<RoleModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return PartialView("RoleForm", model);
         }
-        [HttpGet]
+        [HttpPost]
         [Authentication]
         public ActionResult ModifyRole(RoleModel model)
         {
@@ -316,7 +321,7 @@ namespace InvoicingSystemWeb.Controllers
             {
                 string statusCode = "";
                 string url = string.Format("{0}/Account/DeleteRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
-                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"],out statusCode));
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
                 if (isSuccess)
                 {
                     return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
@@ -332,6 +337,112 @@ namespace InvoicingSystemWeb.Controllers
             }
         }
         #endregion
+        #region Organize
+        [UserPermission]
+        public ActionResult Organize()
+        {
+            return View();
+        }
 
+        public JsonResult OrganizeList()
+        {
+            string url = string.Format("{0}/Account/GetOrganizeList", ConfigurationManager.AppSettings["APIAddress"]);
+            List<OrganizeModel> list = HttpClientHelpClass.GetResponse<List<OrganizeModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            TreeData treeData = GetOrganizeData(list);
+           // Guid gid = Guid.NewGuid();
+           // Guid gid1 = Guid.NewGuid();
+           // TreeData treeData = new TreeData
+           //{
+           //    id = gid,
+           //    name = "总公司",
+           //    link = "https://www.baidu.com/",
+           //    //pid=Guid.Empty,
+           //    childrens = new List<TreeData>
+           //     {
+           //         new TreeData()
+           //         {
+           //             id=gid1,
+           //             name="分公司1",
+           //             link="https://www.baidu.com/",
+           //             pid=gid,
+           //             childrens=new List<TreeData>()
+           //             {
+           //                 new TreeData
+           //                 {
+           //                      id=Guid.NewGuid(),
+           //                      name="分公司1-1",
+           //                      link="https://www.baidu.com/",
+           //                      pid=gid1
+           //                 }
+           //             }
+           //         },
+           //         new TreeData()
+           //         {
+           //             id=Guid.NewGuid(),
+           //             name="分公司2",
+           //             link="https://www.baidu.com/",
+           //             pid=gid
+           //         },
+           //         new TreeData()
+           //         {
+           //             id=Guid.NewGuid(),
+           //             name="分公司3",
+           //             link="https://www.baidu.com/",
+           //             pid=gid
+           //         }
+           //     }
+           //};
+            TreeModel tree = new TreeModel
+            {
+                data = new List<TreeData> { treeData }
+            };
+
+            string a = JsonConvert.SerializeObject(tree);
+            var result = new JsonResult();
+            result.Data = tree;
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return result;
+        }
+        public TreeData GetOrganizeData(List<OrganizeModel> nodes, OrganizeModel currentNode = null)
+        {
+            if (currentNode == null)
+            {
+                currentNode = nodes.Where(t => t.depth == 0 && (t.parentID == Guid.Empty || t.parentID == null)).FirstOrDefault();
+                if(currentNode==null)
+                {
+                    return null;
+                }
+            }
+            TreeData data = new TreeData()
+            {
+                id = currentNode.organizeID,
+                link = "",
+                name = currentNode.organizeName,
+                pid = currentNode.parentID
+            };
+            List<TreeData> children = new List<TreeData>();
+            IEnumerable<OrganizeModel> subNodes = nodes.Where(t => t.parentID == currentNode.organizeID);
+            foreach (OrganizeModel node in subNodes)
+            {
+                TreeData cdata = GetOrganizeData(nodes, node);
+                children.Add(cdata);
+            }
+            data.childrens = children;
+            return data;
+        }
+        #endregion
+        private List<SelectListItem> GetRoleSelectList()
+        {
+            List<SelectListItem> menuList = new List<SelectListItem>();
+            menuList.Add(new SelectListItem { Text = "无", Value = "" });
+            string url = string.Format("{0}/Account/GetRoleList?pageIndex={1}&pageSize={2}", ConfigurationManager.AppSettings["APIAddress"], -1, -1);
+            List<RoleModel> list = HttpClientHelpClass.GetResponse<List<RoleModel>>(url, ConfigurationManager.AppSettings["APIToken"]).Where(t => t.enable == true).OrderBy(t => t.roleID).ToList();
+            //List<Sys_Role> list = bll.GetRoleList().Where(t => t.enable == true).OrderBy(t => t.roleID).ToList();
+            foreach (var model in list)
+            {
+                menuList.Add(new SelectListItem { Text = model.roleName, Value = model.roleID.ToString() });
+            }
+            return menuList;
+        }
     }
 }

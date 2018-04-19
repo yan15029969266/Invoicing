@@ -92,6 +92,7 @@ namespace InvoicingSystemWeb.Controllers
         [Authentication]
         public ActionResult ModifyMenu(Guid id)
         {
+            ViewBag.menu = GetMenuSelectList();
             string url = string.Format("{0}/Component/GetMenu?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
             Sys_MenuModel model = HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return PartialView("MenuForm", model);
@@ -103,6 +104,14 @@ namespace InvoicingSystemWeb.Controllers
             UpdateBaseData(model);
             try
             {
+                if (model.parentID == Guid.Empty)
+                {
+                    model.menuLevel = 1;
+                }
+                else
+                {
+                    model.menuLevel = 2;
+                }
                 string url = string.Format("{0}/Component/UpdateMenu", ConfigurationManager.AppSettings["APIAddress"]);
                 string statusCode = string.Empty;
                 bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<Sys_MenuModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
