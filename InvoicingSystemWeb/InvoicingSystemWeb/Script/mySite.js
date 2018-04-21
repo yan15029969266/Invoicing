@@ -418,7 +418,9 @@ function DeleteRecord(actionUrl, param, oTable, callback) {
                     else if (result.ResultType == 7) {
                         toastr.error(result.Message);
                     }
-                    ReloadDataTable(oTable);
+                    if (oTable) {
+                        ReloadDataTable(oTable);
+                    }
                     if (callback && typeof (callback) == "function") {
                         callback();
                     }

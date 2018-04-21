@@ -296,6 +296,82 @@ namespace CoreLogic.Implementation
                 return conn.GetList<Organize>().ToList();
             }
         }
+        public Organize GetOrganize(Guid id)
+        {
+            using(IDbConnection conn=OpenConnection())
+            {
+                return conn.Get<Organize>(id);
+            }
+        }
+        public bool InsertOrganize(Organize model)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                Guid oID = conn.Insert<Guid>(model);
+                if(oID==Guid.Empty||oID==null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+        }
+        public bool UpdateOrganize(Organize model)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                int row = conn.Update(model);
+                if(row>0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool DeleteOrganize(Guid id)
+        {
+            using (IDbConnection conn = OpenConnection())
+            {
+                IDbTransaction tranc = conn.BeginTransaction();
+                try
+                {
+                    DeleteOrganize(conn, tranc, id);
+                    tranc.Commit();
+                    return true;
+                }
+                catch(Exception ex)
+                {
+                    tranc.Rollback();
+                    return false;
+                }
+                //int row = conn.Delete<Organize>(id);
+                //if (row > 0)
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
+            }
+        }
+        public void DeleteOrganize(IDbConnection conn,IDbTransaction tranc,Guid oid)
+        {
+            conn.Delete<Organize>(oid, tranc);
+            var subList = conn.GetList<Organize>(new { parentID = oid },tranc);
+            if(subList.Count()>0)
+            {
+                foreach(Organize o in subList)
+                {
+                    DeleteOrganize(conn, tranc, o.organizeID);
+                }
+            }
+        }
         #endregion
     }
 }

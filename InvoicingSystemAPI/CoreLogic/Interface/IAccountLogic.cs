@@ -32,8 +32,8 @@ namespace CoreLogic.Interface
         #region Organize
         List<Organize> GetOrganizeList();
         Organize GetOrganize(Guid id);
-        bool InsertOrganize(OrganizeModel model);
-        bool UpdateOrganize(OrganizeModel model);
+        bool InsertOrganize(Organize model);
+        bool UpdateOrganize(Organize model);
         bool DeleteOrganize(Guid id);
         #endregion
     }

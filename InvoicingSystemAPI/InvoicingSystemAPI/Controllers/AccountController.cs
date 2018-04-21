@@ -190,14 +190,18 @@ namespace InvoicingSystemAPI.Controllers
         public bool InsertOrganize([FromBody]OrganizeModel model)
         {
             IAccountLogic IComponent = container.Resolve<IAccountLogic>();
-            return IComponent.InsertOrganize(model);
+            Mapper.CreateMap<OrganizeModel, Organize>(); // 配置
+            Organize organize = Mapper.Map<OrganizeModel, Organize>(model); // 使用AutoMapper自动映射
+            return IComponent.InsertOrganize(organize);
         }
         [Route("api/Account/UpdateOrganize")]
         [HttpPost]
         public bool UpdateOrganize([FromBody]OrganizeModel model)
         {
             IAccountLogic IComponent = container.Resolve<IAccountLogic>();
-            return IComponent.UpdateOrganize(model);
+            Mapper.CreateMap<OrganizeModel, Organize>(); // 配置
+            Organize organize = Mapper.Map<OrganizeModel, Organize>(model); // 使用AutoMapper自动映射
+            return IComponent.UpdateOrganize(organize);
         }
         [HttpGet]
         [Route("api/Account/DeleteOrganize")]

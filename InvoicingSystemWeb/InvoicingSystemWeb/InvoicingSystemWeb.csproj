@@ -1006,6 +1006,7 @@
     <Content Include="Views\Account\RoleForm.cshtml" />
     <Content Include="Views\Account\Organize.cshtml" />
     <Content Include="Test\test.json" />
+    <Content Include="Views\Account\OrganizeForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

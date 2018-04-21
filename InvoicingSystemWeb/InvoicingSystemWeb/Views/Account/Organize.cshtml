@@ -1,10 +1,9 @@
-﻿@{
-    Layout = null;
-}
+﻿
 <link href="~/plugins/jOrgChart/css/jquery.jOrgChart.css" rel="stylesheet" />
-<link href="//cdn.bootcss.com/toastr.js/latest/css/toastr.css" rel="stylesheet">
-<link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
 <style>
+    table {
+        border-collapse: initial !important;
+    }
     a {
         text-decoration: none;
         color: #fff;
@@ -86,8 +85,9 @@
 <link href="~/plugins/jqueryYoujian/css/contextMenu.css" rel="stylesheet" />
 <html style="background-color:white">
 <body>
-    <section>
+    <section class="content-header sub_head">
         @ViewBag.PageTitle
+        @ViewBag.Breadcrumb
     </section>
     @*<div class="btn-toolbar">
             @ViewBag.btnToolBar
@@ -95,27 +95,27 @@
     <div class="content">
         <div id='jOrgChart'></div>
     </div>
+    @Html.Partial("_FormModal")
 </body>
 </html>
-<script src="~/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script src="~/plugins/jOrgChart/jquery.jOrgChart.js"></script>
 <script src="~/plugins/jqueryYoujian/js/contextMenu.js"></script>
-<script src="//cdn.bootcss.com/toastr.js/latest/js/toastr.js"></script>
+<script src="~/Script/mySite.js"></script>
 <script type='text/javascript'>
-    toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "positionClass": "toast-top-center",
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "500",
-        "timeOut": "3000",
-        "extendedTimeOut": "0",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
+    //toastr.options = {
+    //    "closeButton": false,
+    //    "debug": false,
+    //    "positionClass": "toast-top-center",
+    //    "onclick": null,
+    //    "showDuration": "300",
+    //    "hideDuration": "500",
+    //    "timeOut": "3000",
+    //    "extendedTimeOut": "0",
+    //    "showEasing": "swing",
+    //    "hideEasing": "linear",
+    //    "showMethod": "fadeIn",
+    //    "hideMethod": "fadeOut"
+    //}
     $(function () {
         //"@Url.Action("OrganizeList")?rand=" + Math.random()
         //http://localhost:4208/Test/test.json
@@ -210,7 +210,7 @@
     }
     function Add(id) {
         if (id) {
-            ShowModal("@Url.Action("AddMenu")", {}, "添加菜单", 2);
+            ShowModal("@Url.Action("AddOrganize")", {pid:id}, "添加组织", 2);
         }
         else
         {
@@ -219,13 +219,18 @@
     }
     function Modify(id) {
         if (id)
-            ShowModal("@Url.Action("ModifyMenu")", { Id: id }, "修改菜单", 2);
+            ShowModal("@Url.Action("ModifyOrganize")", { Id: id }, "修改菜单", 2);
         else
             toastr.warning("请选择一条数据");
     }
     function Delete(id) {
         if (id)
-            DeleteRecord("@Url.Action("DeleteMenu")", { Id: id }, oTable);
+            DeleteRecord("@Url.Action("DeleteOrganize")", { Id: id }, null,
+                function ()
+                {
+                    window.location.reload();
+                }
+            );
         else
             toastr.warning("请选择一条数据");
     }

@@ -338,6 +338,7 @@ namespace InvoicingSystemWeb.Controllers
         }
         #endregion
         #region Organize
+        [Authentication]
         [UserPermission]
         public ActionResult Organize()
         {
@@ -429,6 +430,97 @@ namespace InvoicingSystemWeb.Controllers
             }
             data.childrens = children;
             return data;
+        }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult AddOrganize(Guid pid)
+        {
+            OrganizeModel model = new OrganizeModel { organizeID = Guid.NewGuid() ,parentID=pid};
+            return PartialView("OrganizeForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult AddOrganize(OrganizeModel model)
+        {
+            InsertBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/InsertOrganize", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<OrganizeModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "添加成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+            }
+        }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyOrganize(Guid Id)
+        {
+            string url = string.Format("{0}/Account/GetOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], Id);
+            OrganizeModel model = HttpClientHelpClass.GetResponse<OrganizeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("OrganizeForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ModifyOrganize(OrganizeModel model)
+        {
+            UpdateBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/UpdateOrganize", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<OrganizeModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "修改失败！", e.Message));
+            }
+        }
+        public ActionResult DeleteOrganize(Guid id)
+        {
+            try
+            {
+                string url = string.Format("{0}/Account/GetOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                OrganizeModel model = HttpClientHelpClass.GetResponse<OrganizeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+                if(model.depth==0)
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "无法删除根节点！"));
+                }
+                string statusCode = "";
+                url = string.Format("{0}/Account/DeleteOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
+            }
         }
         #endregion
         private List<SelectListItem> GetRoleSelectList()
