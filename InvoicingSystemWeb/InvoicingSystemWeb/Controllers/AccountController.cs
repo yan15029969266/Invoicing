@@ -191,6 +191,14 @@ namespace InvoicingSystemWeb.Controllers
             }
         }
 
+        [Authentication] 
+        public ActionResult PersonalInformationForm()
+        {
+            EmployeModel e = GetEmployInCookie();
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], e.employeID);
+            EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return View(model);
+        }
         #endregion
         #region Role
         [Authentication]

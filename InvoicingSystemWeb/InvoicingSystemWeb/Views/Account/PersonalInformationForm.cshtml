@@ -1,0 +1,140 @@
+﻿@model DataModel.EmployeModel
+<link href="~/Css/site.css" rel="stylesheet" />
+
+<section class="content-header sub_head">
+
+    <h1>员工管理<small> 个人信息修改</small></h1>
+    <ol class="breadcrumb"><li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li><li><a href="">员工管理</a></li><li class="active">个人信息修改</li></ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="btn-toolbar"><button class="btn btn-primary margin" onclick="Auth()">修改头像</button><button class="btn btn-primary margin" onclick="Auth()">修改密码</button></div>
+        </div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-body">
+                    <form id="EmployerInfo" class="form-horizontal" action="@Url.Action("ModifyEmployer")">
+                        <div class="form-horizontal container">
+                            @Html.TextBoxFor(t => t.cid, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.ctime, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employeID, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employePwd, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employeNo, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employeName, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employePost, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employeAccount, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.entryTime, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.enable, new { @class = "hidden" })
+                            @Html.TextBoxFor(t => t.employeImage, new { @class = "hidden" })
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">员工编号</label>
+                                <div class="input-group col-sm-10">
+                                    @Html.TextBoxFor(t => t.employeNo, new { @class = "form-control", @disabled = "disabled" })
+                                    @*<input class="form-control" value="" />*@
+                                    @*<label class="col-sm-10">@Model.employeNo</label>*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">姓名</label>
+                                <div class="input-group col-sm-10">
+                                    @Html.TextBoxFor(t => t.employeName, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">职位</label>
+                                <div class="input-group col-sm-10">
+                                    @Html.TextBoxFor(t => t.employePost, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">账号</label>
+                                <div class="input-group col-sm-10">
+                                    @Html.TextBoxFor(t => t.employeAccount, new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">电话</label>
+                                <div class="input-group col-sm-10">
+                                    @Html.TextBoxFor(t => t.employPhone, new { @class = "form-control", @placeholder = "电话" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">入职时间</label>
+                                <div class="input-group col-sm-10">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    @*<input type="text" class="form-control" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>*@
+                                    <input type="text" id="datemask" name="entryTime" value="@Model.entryTime.ToString("yyyy/MM/dd")" class="form-control" disabled="disabled" />
+                                </div><!-- /.input group -->
+                            </div>
+                            @*<div class="form-group">
+                    <label class="col-sm-2 control-label">头像</label>
+                    <div class="input-group col-sm-10">
+                        @Html.TextBoxFor(t => t.employeImage, new { @class = "form-control", @placeholder = "入职时间" })
+                    </div>
+                </div>*@
+                            <div class="box-footer left">
+                                <button type="button" class="btn btn-primary pull-right" onclick="SaveInfo()">提交</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@Html.Partial("_FormModal")
+<script src="~/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script>
+    $(function () {
+        $("#datemask").inputmask("yyyy/mm/dd", { "placeholder": "yyyy/mm/dd" });
+        //$("[data-mask]").inputmask();
+    });
+    function SaveInfo() {
+        var $form = $("#EmployerInfo");
+        var actionUrl =$form.attr("action");
+        //alert(actionUrl);
+        var data =$form.serialize();
+        //alert(data);
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: data,
+            async: false,
+            success: function (data) {
+                //判断返回值，若为Object类型，即操作成功
+                var result = ((typeof data == 'object') && (data.constructor == Object));
+                if (result) {
+                    if (data.ResultType == "0") {
+                        toastr.success(data.Message);
+                        setTimeout(function () { window.location.reload(); }, 2000)
+                    }
+                    else if (data.ResultType == "4") {
+                        location.href = "/Account/Login"
+                    }
+                    else if (data.ResultType == "6") {
+                        toastr.warning(data.Message);
+                    }
+                    else if (data.ResultType == "7") {
+                        toastr.error(data.Message);
+                    }
+                }
+                else {
+                    $("#modal-content").html(data);
+                }
+            },
+            error: function () {
+                var result = ((typeof data == 'object') && (data.constructor == Object));
+                if (result) {
+                    toastr.error(data.Message);
+                }
+                else {
+                    $("#modal-content").html(data);
+                }
+            }
+        });
+    }
+</script>

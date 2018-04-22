@@ -214,15 +214,15 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="~/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                                <span class="hidden-xs">Alexander Pierce</span>
+                                <span class="hidden-xs">@Model.employ.employeName</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header">
                                     <img src="~/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                     <p>
-                                        姓名 - 职位
-                                        <small>入职时间 Nov. 2012</small>
+                                        @Model.employ.employeName - @Model.employ.employePost
+                                        <small>入职时间 @Model.employ.entryTime.ToString("yyyy-MM-dd")</small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
@@ -240,7 +240,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                        <a href="#" class="btn btn-default btn-flat" id="ModifyPerson">修改个人信息</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="/Account/Logout" class="btn btn-default btn-flat">退出</a>
@@ -263,10 +263,17 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="~/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        @if(string.IsNullOrEmpty(Model.employ.employeImage))
+                        { 
+                            <img src="~/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        }
+                        else
+                        {
+                            <img src="@Model.employ.employeImage" class="img-circle" alt="User Image">
+                        }
                     </div>
                     <div class="pull-left info">
-                        <p>严卓熙</p>
+                        <p>@Model.employ.employeName</p>
                         <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
                     </div>
                 </div>
@@ -579,6 +586,11 @@
                $(this).addClass("active");
                $("#mainContent").attr("src", src);
 
+           });
+           $("#ModifyPerson").click(function ()
+           {
+               var src = "/Account/PersonalInformationForm";
+               $("#mainContent").attr("src", src);
            });
            $('#mainContent').load(
                    function () {
