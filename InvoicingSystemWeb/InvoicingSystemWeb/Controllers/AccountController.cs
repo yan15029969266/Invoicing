@@ -199,6 +199,33 @@ namespace InvoicingSystemWeb.Controllers
             EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return View(model);
         }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ChangePassword(Guid id)
+        {
+            ChangePwdModel model = new ChangePwdModel { employerID = id };
+            return PartialView("ChangePasswordForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ChangePassword(ChangePwdModel model)
+        {
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], model.employerID);
+            EmployeModel emodel = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            if (MD5HelpClass.CreateMD5Hash(model.oldPwd)!=emodel.employePwd)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "原始密码输入错误！"));
+            }
+            bool isSuccess = true;
+            if (isSuccess)
+            {
+                return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+            }
+            else
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+            }
+        }
         #endregion
         #region Role
         [Authentication]

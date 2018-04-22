@@ -153,7 +153,8 @@
     <Content Include="dist\js\pages\dashboard.js" />
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="Global.asax" />
-    <Content Include="HtmlPage1.html" />
+    <Content Include="Script\ValidationExtention.js" />
+    <Content Include="Test\HtmlPage1.html" />
     <Content Include="plugins\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="plugins\bootstrap-slider\slider.css" />
     <Content Include="plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.js" />
@@ -906,6 +907,7 @@
     <Content Include="Script\mySite.js" />
     <Content Include="Script\wwt.js" />
     <Content Include="Script\wwt_bak.js" />
+    <Content Include="Test\HtmlPage2.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1008,6 +1010,7 @@
     <Content Include="Test\test.json" />
     <Content Include="Views\Account\OrganizeForm.cshtml" />
     <Content Include="Views\Account\PersonalInformationForm.cshtml" />
+    <Content Include="Views\Account\ChangePasswordForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

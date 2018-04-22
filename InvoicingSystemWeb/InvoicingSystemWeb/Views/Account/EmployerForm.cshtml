@@ -68,12 +68,13 @@
         </div>
     </div>
 </div>
-@*<script src="~/plugins/input-mask/jquery.inputmask.js"></script>*@
+<script src="~/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="~/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 <script src="~/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
 <script>
     $(function () {
         $("#datemask").inputmask("yyyy/mm/dd", { "placeholder": "yyyy/mm/dd" });
-        //$("[data-mask]").inputmask();
+        $("[data-mask]").inputmask();
     });
     function Save() {
         SaveModal(oTable);
