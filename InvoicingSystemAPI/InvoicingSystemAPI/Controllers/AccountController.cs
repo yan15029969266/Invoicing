@@ -163,6 +163,22 @@ namespace InvoicingSystemAPI.Controllers
             EmployeModel model = Mapper.Map<Employe, EmployeModel>(employe);
             return model;
         }
+        [HttpPost]
+        [Route("api/Account/ChangePassword")]
+        public bool ChangePassword(ChangePwdModel model)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            Employe e = IUser.GetEmploye(model.employerID);
+            if(e.employePwd==model.oldPwd&&model.newPwd==model.rePwd)
+            {
+                e.employePwd = model.newPwd;
+                return IUser.UpdateEmploye(e);
+            }
+            else
+            {
+                return false;
+            }
+        }
         #endregion
         #region Organize
         [HttpGet]

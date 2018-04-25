@@ -107,10 +107,12 @@ namespace InvoicingSystemWeb.Controllers
         [Authentication]
         public ActionResult AddEmployer()
         {
+            EmployeModel currentUser = GetEmployInCookie();
             string statusCode = "";
-            EmployeModel model = new EmployeModel { employeID = Guid.NewGuid() };
+            EmployeModel model = new EmployeModel { employeID = Guid.NewGuid(), fk_organizeID=currentUser.fk_organizeID };
             string url = string.Format("{0}/Account/GetNewEmployeNo", ConfigurationManager.AppSettings["APIAddress"]);
             ViewBag.RoleList = GetRoleSelectList();
+            ViewBag.OrganizeList = GetOrganizeSelectList();
             model.employeNo = HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode);
             model.entryTime = DateTime.Now;
             model.employePwd = MD5HelpClass.CreateMD5Hash("1qaz!QAZ");
@@ -142,6 +144,7 @@ namespace InvoicingSystemWeb.Controllers
             string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
             EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             ViewBag.RoleList = GetRoleSelectList();
+            ViewBag.OrganizeList = GetOrganizeSelectList();
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
@@ -212,11 +215,16 @@ namespace InvoicingSystemWeb.Controllers
         {
             string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], model.employerID);
             EmployeModel emodel = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
-            if (MD5HelpClass.CreateMD5Hash(model.oldPwd)!=emodel.employePwd)
+            model.oldPwd = MD5HelpClass.CreateMD5Hash(model.oldPwd);
+            model.newPwd = MD5HelpClass.CreateMD5Hash(model.newPwd);
+            model.rePwd = MD5HelpClass.CreateMD5Hash(model.rePwd);
+            if (model.oldPwd != emodel.employePwd)
             {
                 return Json(new OperationResult(OperationResultType.Warning, "原始密码输入错误！"));
             }
-            bool isSuccess = true;
+            url = string.Format("{0}/Account/ChangePassword", ConfigurationManager.AppSettings["APIAddress"]);
+            string statusCode = string.Empty;
+            bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<ChangePwdModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
             if (isSuccess)
             {
                 return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
@@ -225,6 +233,14 @@ namespace InvoicingSystemWeb.Controllers
             {
                 return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
             }
+        }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult ChangeHeadPortraits(Guid id)
+        {
+            ChangePwdModel model = new ChangePwdModel { employerID = id };
+            return PartialView("ChangeHeadPortraitsForm", model);
         }
         #endregion
         #region Role
@@ -568,6 +584,17 @@ namespace InvoicingSystemWeb.Controllers
             foreach (var model in list)
             {
                 menuList.Add(new SelectListItem { Text = model.roleName, Value = model.roleID.ToString() });
+            }
+            return menuList;
+        }
+        private List<SelectListItem> GetOrganizeSelectList()
+        {
+            List<SelectListItem> menuList = new List<SelectListItem>();
+            string url = string.Format("{0}/Account/GetOrganizeList", ConfigurationManager.AppSettings["APIAddress"]);
+            List<OrganizeModel> list = HttpClientHelpClass.GetResponse<List<OrganizeModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            foreach (var model in list)
+            {
+                menuList.Add(new SelectListItem { Text = model.organizeName, Value = model.organizeID.ToString() });
             }
             return menuList;
         }

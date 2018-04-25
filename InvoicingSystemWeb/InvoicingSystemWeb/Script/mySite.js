@@ -259,7 +259,7 @@ function ShowModalByTag(tag, actionUrl, param, title, width) {
 function ShowDialogModal(actionUrl, param, title) {
 
     //Dialog初始化
-    $(".model-title").html(title);
+    $("#dialog-title").html(title);
 
     $.ajax({
         type: "GET",
@@ -270,7 +270,7 @@ function ShowDialogModal(actionUrl, param, title) {
         },
         success: function (result) {
             $("#dialogModal-content").html(result);
-            $('#dialogModal-form').modal('show');
+            $('#modal-dialog').modal('show');
             //RegisterForm();
         },
         error: function () {
@@ -298,6 +298,12 @@ function CloseModal() {
 function CloseModalByTag(tag) {
     $('#' + tag + '-modal-form').modal('hide');
     ClearForm($("#" + tag + "-modal-content"));
+}
+
+function CloseDialogModal()
+{
+    $('#modal-dialog').modal('hide');
+    ClearForm($("#dialogModal-content"));
 }
 
 

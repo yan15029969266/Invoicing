@@ -22,6 +22,7 @@ namespace DBDataModel
         public string employeImage { get; set; }
         public Guid fk_roleID { get; set; }
         //public int fk_areaID { get; set; }
+        public Guid fk_organizeID { get; set; }
         public bool enable { get; set; }
         public DateTime ctime { get; set; }
         public Guid cid { get; set; }

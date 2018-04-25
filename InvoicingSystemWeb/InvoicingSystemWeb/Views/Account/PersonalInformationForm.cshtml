@@ -9,7 +9,7 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-            <div class="btn-toolbar"><button class="btn btn-primary margin" onclick="Auth()">修改头像</button><button class="btn btn-primary margin" onclick="ChangePassword()">修改密码</button></div>
+            <div class="btn-toolbar"><button class="btn btn-primary margin" onclick="ChangeHeadPortraits()">修改头像</button><button class="btn btn-primary margin" onclick="    ChangePassword()">修改密码</button></div>
         </div>
         <div class="col-xs-12">
             <div class="box">
@@ -89,6 +89,7 @@
     </div>
 </section>
 @Html.Partial("_FormModal")
+@Html.Partial("_DialogModal")
 <script src="~/Script/mySite.js"></script>
 <script src="~/Script/ValidationExtention.js"></script>
 <script>
@@ -165,6 +166,12 @@
     function ChangePassword()
     {
         var id = "@Model.employeID";
-        ShowModal("@Url.Action("ChangePassword")", { Id: id }, "修改密码", 2);
+        ShowModal("@Url.Action("ChangePassword")", { Id: id }, "修改密码");
     }
+    function ChangeHeadPortraits()
+    {
+        var id = "@Model.employeID";
+        ShowDialogModal("@Url.Action("ChangeHeadPortraits")", { Id: id }, "修改头像");
+    }
+
 </script>

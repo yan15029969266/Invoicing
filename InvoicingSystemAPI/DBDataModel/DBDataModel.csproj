@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Account\Employe.cs" />
     <Compile Include="Account\Organize.cs" />
-    <Compile Include="Account\OrganizeEmploye.cs" />
     <Compile Include="Account\Role.cs" />
     <Compile Include="Component\Sys_Button.cs" />
     <Compile Include="Component\Sys_ButtonPermissions.cs" />

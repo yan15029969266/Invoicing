@@ -19,6 +19,7 @@ namespace ViewDataModel
         public string employPhone { get; set; }
         public string employeImage { get; set; }
         public Guid fk_roleID { get; set; }
+        public Guid fk_organizeID { get; set; }
         public bool enable { get; set; }
     }
 }
