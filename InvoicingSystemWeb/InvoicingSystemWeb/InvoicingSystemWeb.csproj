@@ -153,7 +153,9 @@
     <Content Include="dist\js\pages\dashboard.js" />
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="Global.asax" />
-    <Content Include="plugins\webuploader-0.1.5\config\demo.css" />
+    <Content Include="plugins\webuploader-0.1.5\config\multiple.css" />
+    <Content Include="plugins\webuploader-0.1.5\config\multiple.js" />
+    <Content Include="plugins\webuploader-0.1.5\config\single.css" />
     <Content Include="plugins\webuploader-0.1.5\Uploader.swf" />
     <Content Include="plugins\webuploader-0.1.5\webuploader.css" />
     <Content Include="plugins\webuploader-0.1.5\webuploader.custom.js" />

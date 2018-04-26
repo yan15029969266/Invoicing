@@ -1,10 +1,9 @@
 ﻿<link href="~/plugins/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
-<div class="container">
-    <div id="uploader">
-        <!--用来存放item-->
-        <div id="fileList" class="uploader-list"></div>
-        <div id="filePicker">选择图片</div>
-    </div>
+<link href="~/plugins/webuploader-0.1.5/config/single.css" rel="stylesheet" />
+<div id="uploader">
+    <!--用来存放item-->
+    <div id="fileList" class="uploader-list" style="width:120px;margin:auto;"></div>
+    <div id="filePicker" style="width:120px;margin:auto;">选择图片</div>
 </div>
 @*<script src="~/plugins/jQuery/jQuery-2.1.4.min.js"></script>*@
 <script src="~/plugins/webuploader-0.1.5/webuploader.min.js"></script>
@@ -87,7 +86,6 @@
 
         // 文件上传失败，显示上传出错。
         uploader.on('uploadError', function (file) {
-            alert(123);
             var $li = $('#' + file.id),
                 $error = $li.find('div.error');
 
@@ -104,5 +102,5 @@
             $('#' + file.id).find('.progress').remove();
         });
     });
-   
+
 </script>

@@ -256,8 +256,10 @@ function ShowModalByTag(tag, actionUrl, param, title, width) {
 }
 
 /*******弹出Dialog*********/
-function ShowDialogModal(actionUrl, param, title) {
-
+function ShowDialogModal(actionUrl, param, title, width) {
+    if (width != null) {
+        $(".modal-dialog").width(width);
+    }
     //Dialog初始化
     $("#dialog-title").html(title);
 

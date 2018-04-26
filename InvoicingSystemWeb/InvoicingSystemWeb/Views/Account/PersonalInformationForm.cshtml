@@ -166,12 +166,12 @@
     function ChangePassword()
     {
         var id = "@Model.employeID";
-        ShowModal("@Url.Action("ChangePassword")", { Id: id }, "修改密码");
+        ShowModal("@Url.Action("ChangePassword")", { Id: id }, "修改密码",600);
     }
     function ChangeHeadPortraits()
     {
         var id = "@Model.employeID";
-        ShowDialogModal("@Url.Action("ChangeHeadPortraits")", { Id: id }, "修改头像");
+        ShowDialogModal("@Url.Action("ChangeHeadPortraits")", { Id: id }, "修改头像",400);
     }
 
 </script>
