@@ -179,6 +179,15 @@ namespace InvoicingSystemAPI.Controllers
                 return false;
             }
         }
+        [HttpGet]
+        [Route("api/Account/ChangeHeadPortraits")]
+        public bool ChangeHeadPortraits(Guid employerID,string path)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            Employe e = IUser.GetEmploye(employerID);
+            e.employeImage = path;
+            return IUser.UpdateEmploye(e);
+        }
         #endregion
         #region Organize
         [HttpGet]

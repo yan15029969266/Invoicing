@@ -1,4 +1,5 @@
-﻿<link href="~/plugins/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
+﻿@model DataModel.EmployeModel
+<link href="~/plugins/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
 <link href="~/plugins/webuploader-0.1.5/config/single.css" rel="stylesheet" />
 <div id="uploader">
     <!--用来存放item-->
@@ -19,7 +20,7 @@
             swf: '~/plugins/webuploader-0.1.5/Uploader.swf',
 
             // 文件接收服务端。
-            server: 'ReviceImage',
+            server: 'ChangeHeadPortraits',
 
             // 选择文件的按钮。可选。
             // 内部根据当前运行是创建，可能是input元素，也可能是flash.
@@ -27,6 +28,9 @@
                 id: '#filePicker',
                 multiple: false,
                 label: '点击选择图片'
+            },
+            formData: {
+                eid: "@Model.employeID",
             },
             fileNumLimit: 1,
 

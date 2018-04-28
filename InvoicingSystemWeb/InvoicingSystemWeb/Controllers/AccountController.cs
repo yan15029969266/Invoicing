@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using DataModel;
 using InvoicingSystemWeb.Filters;
 using InvoicingSystemWeb.Extension;
+using System.IO;
 
 namespace InvoicingSystemWeb.Controllers
 {
@@ -239,8 +240,38 @@ namespace InvoicingSystemWeb.Controllers
         [Authentication]
         public ActionResult ChangeHeadPortraits(Guid id)
         {
-            ChangePwdModel model = new ChangePwdModel { employerID = id };
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+            EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return PartialView("ChangeHeadPortraitsForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ChangeHeadPortraits(string id, string name, string type, string lastModifiedDate, int size, Guid eid, HttpPostedFileBase file)
+        {
+            string filePathName = string.Empty;
+
+            string localPath = Path.Combine(HttpRuntime.AppDomainAppPath, "Upload");
+            if (Request.Files.Count == 0)
+            {
+                throw new Exception();
+            }
+            string ex = Path.GetExtension(file.FileName);
+            filePathName = Guid.NewGuid().ToString("N") + ex;
+            if (!System.IO.Directory.Exists(localPath))
+            {
+                System.IO.Directory.CreateDirectory(localPath);
+            }
+            file.SaveAs(Path.Combine(localPath, filePathName));
+            string filePath = "/Upload/" + filePathName;
+            string url = string.Format("{0}/Account/ChangeHeadPortraits?employerID={1}&path={2}", ConfigurationManager.AppSettings["APIAddress"], eid, filePath);
+            string statusCode = "";
+            Boolean isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+            return Json(new
+            {
+                jsonrpc = "2.0",
+                id = id,
+                filePath = filePath
+            });
         }
         #endregion
         #region Role
