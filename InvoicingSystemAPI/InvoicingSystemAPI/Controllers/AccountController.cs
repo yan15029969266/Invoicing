@@ -70,6 +70,7 @@ namespace InvoicingSystemAPI.Controllers
             //执行
             return IUser.UpdateRole(role);
         }
+        [HttpGet]
         [Route("api/Account/DeleteRole")]
         public bool DeleteRole(Guid id)
         {
@@ -161,6 +162,78 @@ namespace InvoicingSystemAPI.Controllers
             Mapper.CreateMap<Employe, EmployeModel>(); // 配置
             EmployeModel model = Mapper.Map<Employe, EmployeModel>(employe);
             return model;
+        }
+        [HttpPost]
+        [Route("api/Account/ChangePassword")]
+        public bool ChangePassword(ChangePwdModel model)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            Employe e = IUser.GetEmploye(model.employerID);
+            if(e.employePwd==model.oldPwd&&model.newPwd==model.rePwd)
+            {
+                e.employePwd = model.newPwd;
+                return IUser.UpdateEmploye(e);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        [HttpGet]
+        [Route("api/Account/ChangeHeadPortraits")]
+        public bool ChangeHeadPortraits(Guid employerID,string path)
+        {
+            IAccountLogic IUser = container.Resolve<IAccountLogic>();
+            Employe e = IUser.GetEmploye(employerID);
+            e.employeImage = path;
+            return IUser.UpdateEmploye(e);
+        }
+        #endregion
+        #region Organize
+        [HttpGet]
+        [Route("api/Account/GetOrganizeList")]
+        public List<OrganizeModel> GetOrganizeList()
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            List<Organize> list = IComponent.GetOrganizeList();
+            Mapper.CreateMap<Organize, OrganizeModel>(); // 配置
+            List<OrganizeModel> resultList = Mapper.Map<List<Organize>, List<OrganizeModel>>(list); // 使用AutoMapper自动映射
+            return resultList;
+        }
+        [HttpGet]
+        [Route("api/Account/GetOrganize")]
+        public OrganizeModel GetOrganize(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Organize organize = IComponent.GetOrganize(id);
+            Mapper.CreateMap<Organize, OrganizeModel>(); // 配置
+            OrganizeModel model = Mapper.Map<Organize, OrganizeModel>(organize); // 使用AutoMapper自动映射
+            return model;
+        }
+        [Route("api/Account/InsertOrganize")]
+        [HttpPost]
+        public bool InsertOrganize([FromBody]OrganizeModel model)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Mapper.CreateMap<OrganizeModel, Organize>(); // 配置
+            Organize organize = Mapper.Map<OrganizeModel, Organize>(model); // 使用AutoMapper自动映射
+            return IComponent.InsertOrganize(organize);
+        }
+        [Route("api/Account/UpdateOrganize")]
+        [HttpPost]
+        public bool UpdateOrganize([FromBody]OrganizeModel model)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            Mapper.CreateMap<OrganizeModel, Organize>(); // 配置
+            Organize organize = Mapper.Map<OrganizeModel, Organize>(model); // 使用AutoMapper自动映射
+            return IComponent.UpdateOrganize(organize);
+        }
+        [HttpGet]
+        [Route("api/Account/DeleteOrganize")]
+        public bool DeleteOrganize(Guid id)
+        {
+            IAccountLogic IComponent = container.Resolve<IAccountLogic>();
+            return IComponent.DeleteOrganize(id);
         }
         #endregion
     }

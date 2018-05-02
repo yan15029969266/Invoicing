@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using DataModel;
 using InvoicingSystemWeb.Filters;
 using InvoicingSystemWeb.Extension;
+using System.IO;
 
 namespace InvoicingSystemWeb.Controllers
 {
@@ -81,7 +82,7 @@ namespace InvoicingSystemWeb.Controllers
             return Redirect("/Account/Login");
         }
 
-          #region Employer
+        #region Employer
         [Authentication]
         [UserPermission]
         public ActionResult Employer()
@@ -107,10 +108,15 @@ namespace InvoicingSystemWeb.Controllers
         [Authentication]
         public ActionResult AddEmployer()
         {
+            EmployeModel currentUser = GetEmployInCookie();
             string statusCode = "";
-            EmployeModel model = new EmployeModel { employeID = Guid.NewGuid() };
+            EmployeModel model = new EmployeModel { employeID = Guid.NewGuid(), fk_organizeID=currentUser.fk_organizeID };
             string url = string.Format("{0}/Account/GetNewEmployeNo", ConfigurationManager.AppSettings["APIAddress"]);
+            ViewBag.RoleList = GetRoleSelectList();
+            ViewBag.OrganizeList = GetOrganizeSelectList();
             model.employeNo = HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode);
+            model.entryTime = DateTime.Now;
+            model.employePwd = MD5HelpClass.CreateMD5Hash("1qaz!QAZ");
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
@@ -138,6 +144,8 @@ namespace InvoicingSystemWeb.Controllers
         {
             string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
             EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            ViewBag.RoleList = GetRoleSelectList();
+            ViewBag.OrganizeList = GetOrganizeSelectList();
             return PartialView("EmployerForm", model);
         }
         [HttpPost]
@@ -185,6 +193,85 @@ namespace InvoicingSystemWeb.Controllers
             {
                 return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
             }
+        }
+
+        [Authentication] 
+        public ActionResult PersonalInformationForm()
+        {
+            EmployeModel e = GetEmployInCookie();
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], e.employeID);
+            EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return View(model);
+        }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ChangePassword(Guid id)
+        {
+            ChangePwdModel model = new ChangePwdModel { employerID = id };
+            return PartialView("ChangePasswordForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ChangePassword(ChangePwdModel model)
+        {
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], model.employerID);
+            EmployeModel emodel = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            model.oldPwd = MD5HelpClass.CreateMD5Hash(model.oldPwd);
+            model.newPwd = MD5HelpClass.CreateMD5Hash(model.newPwd);
+            model.rePwd = MD5HelpClass.CreateMD5Hash(model.rePwd);
+            if (model.oldPwd != emodel.employePwd)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "原始密码输入错误！"));
+            }
+            url = string.Format("{0}/Account/ChangePassword", ConfigurationManager.AppSettings["APIAddress"]);
+            string statusCode = string.Empty;
+            bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<ChangePwdModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+            if (isSuccess)
+            {
+                return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+            }
+            else
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+            }
+        }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult ChangeHeadPortraits(Guid id)
+        {
+            string url = string.Format("{0}/Account/GetEmploye?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+            EmployeModel model = HttpClientHelpClass.GetResponse<EmployeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("ChangeHeadPortraitsForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ChangeHeadPortraits(string id, string name, string type, string lastModifiedDate, int size, Guid eid, HttpPostedFileBase file)
+        {
+            string filePathName = string.Empty;
+
+            string localPath = Path.Combine(HttpRuntime.AppDomainAppPath, "Upload");
+            if (Request.Files.Count == 0)
+            {
+                throw new Exception();
+            }
+            string ex = Path.GetExtension(file.FileName);
+            filePathName = Guid.NewGuid().ToString("N") + ex;
+            if (!System.IO.Directory.Exists(localPath))
+            {
+                System.IO.Directory.CreateDirectory(localPath);
+            }
+            file.SaveAs(Path.Combine(localPath, filePathName));
+            string filePath = "/Upload/" + filePathName;
+            string url = string.Format("{0}/Account/ChangeHeadPortraits?employerID={1}&path={2}", ConfigurationManager.AppSettings["APIAddress"], eid, filePath);
+            string statusCode = "";
+            Boolean isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+            return Json(new
+            {
+                jsonrpc = "2.0",
+                id = id,
+                filePath = filePath
+            });
         }
         #endregion
         #region Role
@@ -282,10 +369,10 @@ namespace InvoicingSystemWeb.Controllers
         public ActionResult ModifyRole(Guid Id)
         {
             string url = string.Format("{0}/Account/GetRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], Id);
-            Sys_MenuModel model = HttpClientHelpClass.GetResponse<Sys_MenuModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            RoleModel model = HttpClientHelpClass.GetResponse<RoleModel>(url, ConfigurationManager.AppSettings["APIToken"]);
             return PartialView("RoleForm", model);
         }
-        [HttpGet]
+        [HttpPost]
         [Authentication]
         public ActionResult ModifyRole(RoleModel model)
         {
@@ -316,7 +403,7 @@ namespace InvoicingSystemWeb.Controllers
             {
                 string statusCode = "";
                 string url = string.Format("{0}/Account/DeleteRole?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
-                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"],out statusCode));
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
                 if (isSuccess)
                 {
                     return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
@@ -332,6 +419,215 @@ namespace InvoicingSystemWeb.Controllers
             }
         }
         #endregion
+        #region Organize
+        [Authentication]
+        [UserPermission]
+        public ActionResult Organize()
+        {
+            return View();
+        }
 
+        public JsonResult OrganizeList()
+        {
+            string url = string.Format("{0}/Account/GetOrganizeList", ConfigurationManager.AppSettings["APIAddress"]);
+            List<OrganizeModel> list = HttpClientHelpClass.GetResponse<List<OrganizeModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            TreeData treeData = GetOrganizeData(list);
+           // Guid gid = Guid.NewGuid();
+           // Guid gid1 = Guid.NewGuid();
+           // TreeData treeData = new TreeData
+           //{
+           //    id = gid,
+           //    name = "总公司",
+           //    link = "https://www.baidu.com/",
+           //    //pid=Guid.Empty,
+           //    childrens = new List<TreeData>
+           //     {
+           //         new TreeData()
+           //         {
+           //             id=gid1,
+           //             name="分公司1",
+           //             link="https://www.baidu.com/",
+           //             pid=gid,
+           //             childrens=new List<TreeData>()
+           //             {
+           //                 new TreeData
+           //                 {
+           //                      id=Guid.NewGuid(),
+           //                      name="分公司1-1",
+           //                      link="https://www.baidu.com/",
+           //                      pid=gid1
+           //                 }
+           //             }
+           //         },
+           //         new TreeData()
+           //         {
+           //             id=Guid.NewGuid(),
+           //             name="分公司2",
+           //             link="https://www.baidu.com/",
+           //             pid=gid
+           //         },
+           //         new TreeData()
+           //         {
+           //             id=Guid.NewGuid(),
+           //             name="分公司3",
+           //             link="https://www.baidu.com/",
+           //             pid=gid
+           //         }
+           //     }
+           //};
+            TreeModel tree = new TreeModel
+            {
+                data = new List<TreeData> { treeData }
+            };
+
+            string a = JsonConvert.SerializeObject(tree);
+            var result = new JsonResult();
+            result.Data = tree;
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            return result;
+        }
+        public TreeData GetOrganizeData(List<OrganizeModel> nodes, OrganizeModel currentNode = null)
+        {
+            if (currentNode == null)
+            {
+                currentNode = nodes.Where(t => t.depth == 0 && (t.parentID == Guid.Empty || t.parentID == null)).FirstOrDefault();
+                if(currentNode==null)
+                {
+                    return null;
+                }
+            }
+            TreeData data = new TreeData()
+            {
+                id = currentNode.organizeID,
+                link = "",
+                name = currentNode.organizeName,
+                pid = currentNode.parentID
+            };
+            List<TreeData> children = new List<TreeData>();
+            IEnumerable<OrganizeModel> subNodes = nodes.Where(t => t.parentID == currentNode.organizeID);
+            foreach (OrganizeModel node in subNodes)
+            {
+                TreeData cdata = GetOrganizeData(nodes, node);
+                children.Add(cdata);
+            }
+            data.childrens = children;
+            return data;
+        }
+
+        [HttpGet]
+        [Authentication]
+        public ActionResult AddOrganize(Guid pid)
+        {
+            OrganizeModel model = new OrganizeModel { organizeID = Guid.NewGuid() ,parentID=pid};
+            return PartialView("OrganizeForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult AddOrganize(OrganizeModel model)
+        {
+            InsertBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/InsertOrganize", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<OrganizeModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "添加成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "添加失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "添加失败！", e.Message));
+            }
+        }
+        [HttpGet]
+        [Authentication]
+        public ActionResult ModifyOrganize(Guid Id)
+        {
+            string url = string.Format("{0}/Account/GetOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], Id);
+            OrganizeModel model = HttpClientHelpClass.GetResponse<OrganizeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+            return PartialView("OrganizeForm", model);
+        }
+        [HttpPost]
+        [Authentication]
+        public ActionResult ModifyOrganize(OrganizeModel model)
+        {
+            UpdateBaseData(model);
+            try
+            {
+                string url = string.Format("{0}/Account/UpdateOrganize", ConfigurationManager.AppSettings["APIAddress"]);
+                string statusCode = string.Empty;
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.PostResponse<OrganizeModel>(url, model, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "修改成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "修改失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "修改失败！", e.Message));
+            }
+        }
+        public ActionResult DeleteOrganize(Guid id)
+        {
+            try
+            {
+                string url = string.Format("{0}/Account/GetOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                OrganizeModel model = HttpClientHelpClass.GetResponse<OrganizeModel>(url, ConfigurationManager.AppSettings["APIToken"]);
+                if(model.depth==0)
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "无法删除根节点！"));
+                }
+                string statusCode = "";
+                url = string.Format("{0}/Account/DeleteOrganize?id={1}", ConfigurationManager.AppSettings["APIAddress"], id);
+                bool isSuccess = Convert.ToBoolean(HttpClientHelpClass.GetResponse(url, ConfigurationManager.AppSettings["APIToken"], out statusCode));
+                if (isSuccess)
+                {
+                    return Json(new OperationResult(OperationResultType.Success, "删除成功！"));
+                }
+                else
+                {
+                    return Json(new OperationResult(OperationResultType.Warning, "删除失败！"));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(new OperationResult(OperationResultType.Warning, "删除失败！", e.Message));
+            }
+        }
+        #endregion
+        private List<SelectListItem> GetRoleSelectList()
+        {
+            List<SelectListItem> menuList = new List<SelectListItem>();
+            menuList.Add(new SelectListItem { Text = "无", Value = "" });
+            string url = string.Format("{0}/Account/GetRoleList?pageIndex={1}&pageSize={2}", ConfigurationManager.AppSettings["APIAddress"], -1, -1);
+            List<RoleModel> list = HttpClientHelpClass.GetResponse<List<RoleModel>>(url, ConfigurationManager.AppSettings["APIToken"]).Where(t => t.enable == true).OrderBy(t => t.roleID).ToList();
+            //List<Sys_Role> list = bll.GetRoleList().Where(t => t.enable == true).OrderBy(t => t.roleID).ToList();
+            foreach (var model in list)
+            {
+                menuList.Add(new SelectListItem { Text = model.roleName, Value = model.roleID.ToString() });
+            }
+            return menuList;
+        }
+        private List<SelectListItem> GetOrganizeSelectList()
+        {
+            List<SelectListItem> menuList = new List<SelectListItem>();
+            string url = string.Format("{0}/Account/GetOrganizeList", ConfigurationManager.AppSettings["APIAddress"]);
+            List<OrganizeModel> list = HttpClientHelpClass.GetResponse<List<OrganizeModel>>(url, ConfigurationManager.AppSettings["APIToken"]);
+            foreach (var model in list)
+            {
+                menuList.Add(new SelectListItem { Text = model.organizeName, Value = model.organizeID.ToString() });
+            }
+            return menuList;
+        }
     }
 }

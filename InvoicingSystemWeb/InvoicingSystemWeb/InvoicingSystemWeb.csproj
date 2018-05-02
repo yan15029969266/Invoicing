@@ -153,6 +153,34 @@
     <Content Include="dist\js\pages\dashboard.js" />
     <Content Include="dist\js\pages\dashboard2.js" />
     <Content Include="Global.asax" />
+    <Content Include="plugins\webuploader-0.1.5\config\multiple.css" />
+    <Content Include="plugins\webuploader-0.1.5\config\multiple.js" />
+    <Content Include="plugins\webuploader-0.1.5\config\single.css" />
+    <Content Include="plugins\webuploader-0.1.5\Uploader.swf" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.css" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.custom.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.custom.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.fis.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.flashonly.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.flashonly.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.html5only.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.html5only.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.noimage.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.noimage.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.nolog.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.nolog.min.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.withoutimage.js" />
+    <Content Include="plugins\webuploader-0.1.5\webuploader.withoutimage.min.js" />
+    <Content Include="Resource\images\bg.png" />
+    <Content Include="Resource\images\icons.png" />
+    <Content Include="Resource\images\image.png" />
+    <Content Include="Resource\images\progress.png" />
+    <Content Include="Resource\images\success.png" />
+    <Content Include="Script\ValidationExtention.js" />
+    <Content Include="Script\wwt.js" />
+    <Content Include="Test\HtmlPage1.html" />
     <Content Include="plugins\bootstrap-slider\bootstrap-slider.js" />
     <Content Include="plugins\bootstrap-slider\slider.css" />
     <Content Include="plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.js" />
@@ -808,12 +836,31 @@
     <Content Include="plugins\ionslider\ion.rangeSlider.min.js" />
     <Content Include="plugins\ionslider\ion.rangeSlider.skinFlat.css" />
     <Content Include="plugins\ionslider\ion.rangeSlider.skinNice.css" />
+    <Content Include="plugins\jOrgChart\css\jquery.jOrgChart.css" />
+    <Content Include="plugins\jOrgChart\jquery.jOrgChart.js" />
     <Content Include="plugins\jquery-validation\jquery.validate.js" />
     <Content Include="plugins\jquery-validation\jquery.validate.min.js" />
     <Content Include="plugins\jquery-validation\messages_zh.js" />
     <Content Include="plugins\jquery-validation\messages_zh.min.js" />
+    <Content Include="plugins\jqueryContextMenu\images\cut.png" />
+    <Content Include="plugins\jqueryContextMenu\images\door.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_add.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_copy.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_delete.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_edit.png" />
+    <Content Include="plugins\jqueryContextMenu\images\page_white_paste.png" />
+    <Content Include="plugins\jqueryContextMenu\jquery.contextMenu.css" />
+    <Content Include="plugins\jqueryContextMenu\jquery.contextMenu.js" />
+    <Content Include="plugins\jqueryContextMenu\jquery.ui.position.js" />
     <Content Include="plugins\jQueryUI\jquery-ui.js" />
     <Content Include="plugins\jQueryUI\jquery-ui.min.js" />
+    <Content Include="plugins\jqueryYoujian\css\contextMenu.css" />
+    <Content Include="plugins\jqueryYoujian\img\add.png" />
+    <Content Include="plugins\jqueryYoujian\img\copy.png" />
+    <Content Include="plugins\jqueryYoujian\img\del.png" />
+    <Content Include="plugins\jqueryYoujian\img\modify.png" />
+    <Content Include="plugins\jqueryYoujian\img\paste.png" />
+    <Content Include="plugins\jqueryYoujian\js\contextMenu.js" />
     <Content Include="plugins\jQuery\jQuery-2.1.4.min.js" />
     <Content Include="plugins\jvectormap\jquery-jvectormap-1.2.2.css" />
     <Content Include="plugins\jvectormap\jquery-jvectormap-1.2.2.min.js" />
@@ -884,8 +931,8 @@
     <Content Include="Script\jQuery.print.js" />
     <Content Include="Script\jquery.PrintArea.js" />
     <Content Include="Script\mySite.js" />
-    <Content Include="Script\wwt.js" />
     <Content Include="Script\wwt_bak.js" />
+    <Content Include="Test\HtmlPage2.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -984,6 +1031,15 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Component\ButtonForm.cshtml" />
     <Content Include="Views\Account\RoleForm.cshtml" />
+    <Content Include="Views\Account\Organize.cshtml" />
+    <Content Include="Test\test.json" />
+    <Content Include="Views\Account\OrganizeForm.cshtml" />
+    <Content Include="Views\Account\PersonalInformationForm.cshtml" />
+    <Content Include="Views\Account\ChangePasswordForm.cshtml" />
+    <Content Include="Views\Shared\_DialogModal.cshtml" />
+    <Content Include="Views\Account\ChangeHeadPortraitsForm.cshtml" />
+    <Content Include="plugins\webuploader-0.1.5\README.md" />
+    <Content Include="Views\Test\ViewPage1.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -994,6 +1050,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Upload\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

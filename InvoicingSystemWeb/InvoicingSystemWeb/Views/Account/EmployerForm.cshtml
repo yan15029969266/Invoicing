@@ -5,13 +5,84 @@
     @Html.TextBoxFor(t => t.employeID, new { @class = "hidden" })
     @Html.TextBoxFor(t => t.employePwd, new { @class = "hidden" })
     @Html.TextBoxFor(t => t.employeNo, new { @class = "hidden" })
+    @Html.TextBoxFor(t => t.employeImage, new { @class = "hidden" })
     <div class="form-group">
-        <label class="col-sm-2">员工编号：</label><label class="col-sm-10">@Model.employeNo</label>
+        <label class="col-sm-2 control-label">员工编号</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employeNo, new { @class = "form-control", @disabled = "disabled" })
+            @*<input class="form-control" value="" />*@
+            @*<label class="col-sm-10">@Model.employeNo</label>*@
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">姓名</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employeName, new { @class = "form-control", @placeholder = "姓名" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">角色</label>
+        <div class="input-group col-sm-10">
+            @Html.DropDownListFor(t => t.fk_roleID, ViewBag.RoleList as List<SelectListItem>, new { @class = "form-control", @placeholder = "角色" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">职位</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employePost, new { @class = "form-control", @placeholder = "职位" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">账号</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employeAccount, new { @class = "form-control", @placeholder = "账号" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">电话</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employPhone, new { @class = "form-control", @placeholder = "电话" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">入职时间</label>
+        <div class="input-group col-sm-10">
+            <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </div>
+            @*<input type="text" class="form-control" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask>*@
+            <input type="text" id="datemask" name="entryTime" value="@Model.entryTime.ToString("yyyy/MM/dd")" class="form-control" />
+        </div><!-- /.input group -->
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">组织</label>
+        <div class="input-group col-sm-10">
+            @Html.DropDownListFor(t => t.fk_organizeID, ViewBag.OrganizeList as List<SelectListItem>, new { @class = "form-control", @placeholder = "组织" })
+        </div>
+    </div>
+    @*<div class="form-group">
+        <label class="col-sm-2 control-label">头像</label>
+        <div class="input-group col-sm-10">
+            @Html.TextBoxFor(t => t.employeImage, new { @class = "form-control", @placeholder = "入职时间" })
+        </div>
+    </div>*@
+    <div class="form-group">
+        <label class="col-sm-2 control-label">状态</label>
+        <div class="input-group  col-sm-10">
+            @Html.CheckBoxFor(t => t.enable, new { @class = "flat-red", @style = "margin-top: 10px;" })
+            @*<input type="password" class="form-control" id="inputPassword3" placeholder="执行方法">*@
+        </div>
     </div>
 </div>
+<script src="~/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="~/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="~/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
 <script>
-    function Save()
-    {
+    $(function () {
+        $("#datemask").inputmask("yyyy/mm/dd", { "placeholder": "yyyy/mm/dd" });
+        $("[data-mask]").inputmask();
+    });
+    function Save() {
         SaveModal(oTable);
     }
 </script>

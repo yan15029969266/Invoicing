@@ -256,10 +256,12 @@ function ShowModalByTag(tag, actionUrl, param, title, width) {
 }
 
 /*******弹出Dialog*********/
-function ShowDialogModal(actionUrl, param, title) {
-
+function ShowDialogModal(actionUrl, param, title, width) {
+    if (width != null) {
+        $(".modal-dialog").width(width);
+    }
     //Dialog初始化
-    $(".model-title").html(title);
+    $("#dialog-title").html(title);
 
     $.ajax({
         type: "GET",
@@ -270,7 +272,7 @@ function ShowDialogModal(actionUrl, param, title) {
         },
         success: function (result) {
             $("#dialogModal-content").html(result);
-            $('#dialogModal-form').modal('show');
+            $('#modal-dialog').modal('show');
             //RegisterForm();
         },
         error: function () {
@@ -298,6 +300,12 @@ function CloseModal() {
 function CloseModalByTag(tag) {
     $('#' + tag + '-modal-form').modal('hide');
     ClearForm($("#" + tag + "-modal-content"));
+}
+
+function CloseDialogModal()
+{
+    $('#modal-dialog').modal('hide');
+    ClearForm($("#dialogModal-content"));
 }
 
 
@@ -418,7 +426,9 @@ function DeleteRecord(actionUrl, param, oTable, callback) {
                     else if (result.ResultType == 7) {
                         toastr.error(result.Message);
                     }
-                    ReloadDataTable(oTable);
+                    if (oTable) {
+                        ReloadDataTable(oTable);
+                    }
                     if (callback && typeof (callback) == "function") {
                         callback();
                     }

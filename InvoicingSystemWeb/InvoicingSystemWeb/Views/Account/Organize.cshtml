@@ -1,0 +1,238 @@
+﻿
+<link href="~/plugins/jOrgChart/css/jquery.jOrgChart.css" rel="stylesheet" />
+<style>
+    table {
+        border-collapse: initial !important;
+    }
+    a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 12px;
+    }
+
+    .jOrgChart {
+        text-align: center;
+    }
+
+        .jOrgChart table {
+            margin: auto;
+        }
+
+        .jOrgChart .node {
+            width: 120px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 4px;
+            margin: 0 8px;
+        }
+
+    .content {
+        border-top: 3px solid #d2d6de;
+        padding-top: 30px;
+        margin-top: 10px;
+    }
+
+    .btn-toolbar {
+        margin-left: -5px;
+    }
+
+    .btn {
+        color: #fff;
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    h1 {
+        color: rgb(0, 0, 0);
+        font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 24px;
+        font-weight: 500;
+        line-height: 26.4px;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 0px;
+    }
+
+        h1 > small {
+            box-sizing: border-box;
+            color: rgb(119, 119, 119);
+            display: inline-block;
+            font-family: "Source Sans Pro", sans-serif;
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 15px;
+            padding-left: 4px;
+        }
+</style>
+<link href="~/plugins/jqueryYoujian/css/contextMenu.css" rel="stylesheet" />
+<html style="background-color:white">
+<body>
+    <section class="content-header sub_head">
+        @ViewBag.PageTitle
+        @ViewBag.Breadcrumb
+    </section>
+    @*<div class="btn-toolbar">
+            @ViewBag.btnToolBar
+        </div>*@
+    <div class="content">
+        <div id='jOrgChart'></div>
+    </div>
+    @Html.Partial("_FormModal")
+</body>
+</html>
+<script src="~/plugins/jOrgChart/jquery.jOrgChart.js"></script>
+<script src="~/plugins/jqueryYoujian/js/contextMenu.js"></script>
+<script src="~/Script/mySite.js"></script>
+<script type='text/javascript'>
+    //toastr.options = {
+    //    "closeButton": false,
+    //    "debug": false,
+    //    "positionClass": "toast-top-center",
+    //    "onclick": null,
+    //    "showDuration": "300",
+    //    "hideDuration": "500",
+    //    "timeOut": "3000",
+    //    "extendedTimeOut": "0",
+    //    "showEasing": "swing",
+    //    "hideEasing": "linear",
+    //    "showMethod": "fadeIn",
+    //    "hideMethod": "fadeOut"
+    //}
+    $(function () {
+        //"@Url.Action("OrganizeList")?rand=" + Math.random()
+        //http://localhost:4208/Test/test.json
+        //数据返回
+        $.ajax({
+            url: "@Url.Action("OrganizeList")?rand=" + Math.random(),
+            type: 'GET',
+            dataType: 'JSON',
+            data: { action: 'org_select' },
+            success: function (result) {
+                //alert(result.data);
+                //alert(JSON.stringify(result));
+                var showlist = $("<ul id='org' style='display:none'></ul>");
+                showall(result.data, showlist);
+                $("#jOrgChart").append(showlist);
+                $("#org").jOrgChart({
+                    chartElement: '#jOrgChart',//指定在某个dom生成jorgchart
+                    dragAndDrop: false //设置是否可拖动
+                });
+                AddLeftClick();
+            }
+        });
+    });
+    function showall(menu_list, parent) {
+        $.each(menu_list, function (index, val) {
+            if (val.childrens.length > 0) {
+
+                var li = $("<li></li>");
+                li.append("<a href='" + val.link + "' data-oid='" + val.id + "' onclick=getOrgId(" + val.id + ");>" + val.name + "</a>").append("<ul></ul>").appendTo(parent);
+                //递归显示
+                showall(val.childrens, $(li).children().eq(1));
+            } else {
+                $("<li></li>").append("<a href='" + val.link + "' data-oid='" + val.id + "' onclick=getOrgId(" + val.id + ");>" + val.name + "</a>").appendTo(parent);
+            }
+        });
+
+    }
+    function AddLeftClick() {
+        $(".node").contextMenu({
+            width: 110,// width
+            itemHeight: 30,// 菜单项height
+            bgColor: "#333",// 背景颜色
+            color: "#fff",// 字体颜色
+            fontSize: 12,// 字体大小
+            hoverBgColor: "#99CC66",// hover背景颜色
+            target: function (ele) {// 当前元素
+                console.log(ele);
+                var oid = $(ele).find("a").data("oid");
+                $(".ul-context-menu>li").attr("data-id", oid);
+                //var doms = $('.ui-context-menu-item');
+                //for (var i = 0; i < doms.length; i++) {
+                //    !function (dom, index) {
+                //        dom.onclick = function () {
+                //            window.oid = this.getAttribute("data-id");
+                //        }
+                //        //dom.addEventListener('click', function () {
+                //        //    //alert(this.outerHTML);
+                //        //    //console.log(this.innerHTML);
+                //        //    oid = this.getAttribute("data-id");;
+                //        //    alert(oid);
+                //        //});
+                //    }(doms[i], i);
+                //}
+            },
+            menu: [{// 菜单项
+                text: "新增",
+                icon: "/plugins/jqueryYoujian/img/add.png",
+                callback: function (e) {
+                    var oid = e.attr("data-id");
+                    Add(oid);
+                }
+            },
+                {
+                    text: "修改",
+                    icon: "/plugins/jqueryYoujian/img/modify.png",
+                    callback: function (e) {
+                        var oid = e.attr("data-id");
+                        Modify(oid);
+                    }
+                },
+                {
+                    text: "删除",
+                    icon: "/plugins/jqueryYoujian/img/del.png",
+                    callback: function (e) {
+                        var oid = e.attr("data-id");
+                        Delete(oid);
+                    }
+                }
+            ]
+
+        });
+    }
+    function Add(id) {
+        if (id) {
+            ShowModal("@Url.Action("AddOrganize")", {pid:id}, "添加组织", 2);
+        }
+        else
+        {
+            toastr.warning("请选择一条数据");
+        }
+    }
+    function Modify(id) {
+        if (id)
+            ShowModal("@Url.Action("ModifyOrganize")", { Id: id }, "修改菜单", 2);
+        else
+            toastr.warning("请选择一条数据");
+    }
+    function Delete(id) {
+        if (id)
+            DeleteRecord("@Url.Action("DeleteOrganize")", { Id: id }, null,
+                function ()
+                {
+                    window.location.reload();
+                }
+            );
+        else
+            toastr.warning("请选择一条数据");
+    }
+</script>
+
