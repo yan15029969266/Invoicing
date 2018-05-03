@@ -1040,6 +1040,7 @@
     <Content Include="Views\Account\ChangeHeadPortraitsForm.cshtml" />
     <Content Include="plugins\webuploader-0.1.5\README.md" />
     <Content Include="Views\Test\ViewPage1.cshtml" />
+    <None Include="Properties\PublishProfiles\1.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
