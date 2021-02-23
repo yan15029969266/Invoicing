@@ -48,10 +48,13 @@
     <Compile Include="Component\Sys_Menu.cs" />
     <Compile Include="Component\Sys_MenuButton.cs" />
     <Compile Include="Component\Sys_MenuPermissions.cs" />
+    <Compile Include="Product\Product.cs" />
     <Compile Include="Product\ProductBaseProperty.cs" />
     <Compile Include="Product\ProductCategory.cs" />
+    <Compile Include="Product\ProductImage.cs" />
     <Compile Include="Product\ProductPropertyName.cs" />
     <Compile Include="Product\ProductPropertyValue.cs" />
+    <Compile Include="Product\ProductSku.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
